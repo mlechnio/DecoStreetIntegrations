@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Integrations\Adansonia_Integration.cs" />
     <Compile Include="Integrations\Aluro_Integration.cs" />
     <Compile Include="Integrations\Base\IntegrationBase.cs" />
     <Compile Include="Integrations\CustomForm_Integration.cs" />

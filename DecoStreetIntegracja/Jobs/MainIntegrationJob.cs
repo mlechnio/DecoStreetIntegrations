@@ -16,7 +16,8 @@ namespace DecoStreetIntegracja.Jobs
             new Amiou_Integration();
             new Aluro_Integration();
             new CustomForm_Integration();
-            new Durbas_Integration(); 
+            new Durbas_Integration();
+            new Adansonia_Integration();
         }
     }
 }
