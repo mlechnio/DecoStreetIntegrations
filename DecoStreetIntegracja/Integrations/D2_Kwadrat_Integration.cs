@@ -22,7 +22,7 @@ namespace DecoStreetIntegracja.Integrations
         {
             var nodeO = xmlDoc.CreateElement("o");
             var attrID = xmlDoc.CreateAttribute("id");
-            attrID.Value = sourceNode["numer"].InnerText;
+            attrID.Value = "DK" + sourceNode["numer"].InnerText;
             var attrURL = xmlDoc.CreateAttribute("url");
             attrURL.Value = "";
             var attrPRICE = xmlDoc.CreateAttribute("price");
@@ -73,7 +73,7 @@ namespace DecoStreetIntegracja.Integrations
             var attrNAME1 = xmlDoc.CreateAttribute("name");
             attrNAME1.Value = "Producent";
             nodeANAME1.Attributes.Append(attrNAME1);
-            nodeANAME1.InnerXml = string.Format(StringCostants.CDataFormat, sourceNode["Producent"].InnerText);
+            nodeANAME1.InnerXml = string.Format(StringCostants.CDataFormat, "D2");
             var nodeANAME2 = xmlDoc.CreateElement("a");
             var attrNAME2 = xmlDoc.CreateAttribute("name");
             attrNAME2.Value = "Kod_producenta";
