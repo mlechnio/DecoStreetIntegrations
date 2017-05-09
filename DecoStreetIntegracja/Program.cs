@@ -24,11 +24,7 @@ namespace DecoStreetIntegracja
 
             scheduler.ScheduleJob(job, trigger);
 
-            new D2_Kwadrat_Integration();
-            new Amiou_Integration();
-            new Aluro_Integration();
-            new CustomForm_Integration();
-            new Durbas_Integration();
+            new MainIntegrationJob().RunIntegrations();
         }
     }
 }
