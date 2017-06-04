@@ -28,7 +28,8 @@ namespace DecoStreetIntegracja.Integrations
             var attrPRICE = xmlDoc.CreateAttribute("price");
             attrPRICE.Value = sourceNode["cena_brutto"].InnerText.Replace(",", ".");
             var attrAVAIL = xmlDoc.CreateAttribute("avail");
-            attrAVAIL.Value = int.Parse(sourceNode["stan"].InnerText.Replace(",", ".").Replace(".00", "").Replace("+", "")) == 0 ? "99" : "3";
+            int stan;
+            attrAVAIL.Value = int.TryParse(sourceNode["stan"].InnerText.Replace(",", ".").Replace(".00", "").Replace("+", ""), out stan) ? stan == 0 ? "99" : "3" : "99";
             var attrWEIGHT = xmlDoc.CreateAttribute("weight");
             attrWEIGHT.Value = sourceNode["waga"].InnerText.Replace(",", ".").Replace(".000", ".00");
             var attrSTOCK = xmlDoc.CreateAttribute("stock");
