@@ -1,5 +1,6 @@
-﻿using DecoStreetIntegracja.Integrations;
+using DecoStreetIntegracja.Integrations;
 using Quartz;
+using System;
 
 namespace DecoStreetIntegracja.Jobs
 {
@@ -12,12 +13,59 @@ namespace DecoStreetIntegracja.Jobs
         
         public void RunIntegrations()
         {
-            new D2_Kwadrat_Integration();
-            new Amiou_Integration();
-            new Aluro_Integration();
-            new CustomForm_Integration();
-            new Durbas_Integration();
-            new Adansonia_Integration();
+            try
+            {
+                new D2_Kwadrat_Integration();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            try
+            {
+                new Amiou_Integration();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            try
+            {
+                new Aluro_Integration();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            try
+            {
+                new CustomForm_Integration();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            try
+            {
+                new Durbas_Integration();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            try
+            {
+                new Adansonia_Integration();
+            }
+            catch (Exception)
+            {
+
+            }
         }
     }
 }
