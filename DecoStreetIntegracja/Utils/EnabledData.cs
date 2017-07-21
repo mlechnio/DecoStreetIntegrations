@@ -25,6 +25,7 @@ namespace DecoStreetIntegracja.Utils
             "Lampy",
             "Lustra",
             "Podnóżki",
+            "Poduszka",
             "Poduszki",
             "Pufy",
             "Regały",
