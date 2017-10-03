@@ -15,7 +15,7 @@ namespace DecoStreetIntegracja.Integrations
         public override void Init()
         {
             destinationFileName = "customform_result.xml";
-            sourcePath = "http://www.customform.pl/xml/homebook.xml";
+            sourcePath = "https://customform.co/products.xml";
         }
 
         public override void GenerateResult()
@@ -23,7 +23,7 @@ namespace DecoStreetIntegracja.Integrations
             Console.WriteLine("Rozpoczęcie generowania plików wyjściowych");
             var xmlDocument = new XmlDocument();
             xmlDocument.Load(sourceStream);
-            var xmlNodeList = xmlDocument.SelectNodes("//offers/offer");
+            var xmlNodeList = xmlDocument.SelectNodes("//root/item");
             var xmlDoc = new XmlDocument();
             var xmlDeclaration = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", null);
             xmlDoc.AppendChild(xmlDeclaration);
@@ -69,11 +69,11 @@ namespace DecoStreetIntegracja.Integrations
             var nodeNAME = xmlDoc.CreateElement("name");
             nodeNAME.InnerXml = string.Format(StringCostants.CDataFormat, sourceNode["name"].InnerText);
             var nodeIMGS = xmlDoc.CreateElement("imgs");
-            if (sourceNode["img"].InnerText.Length > 0)
+            if (sourceNode["images"].InnerText.Length > 0)
             {
                 var nodeMAIN = xmlDoc.CreateElement("main");
                 var attrMAINURL = xmlDoc.CreateAttribute("url");
-                attrMAINURL.Value = sourceNode["img"].InnerText.Replace(" ", "%20");
+                attrMAINURL.Value = sourceNode["images"].InnerText.Replace(" ", "%20");
                 nodeMAIN.Attributes.Append(attrMAINURL);
                 nodeIMGS.AppendChild(nodeMAIN);
             }
