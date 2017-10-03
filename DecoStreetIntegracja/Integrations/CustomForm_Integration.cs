@@ -32,7 +32,7 @@ namespace DecoStreetIntegracja.Integrations
 
             foreach (XmlNode sourceNode in xmlNodeList)
             {
-                //if (!sourceNode["categories"].InnerText.Contains("Outlet") && sourceNode["stock"] != null && sourceNode["stock"].InnerText != string.Empty && sourceNode["stock"].InnerText != "brak")
+                if (!sourceNode["categories"].InnerText.ToLower().Contains("outlet"))
                 {
                     element.AppendChild(GenerateONode(xmlDoc, sourceNode));
                 }
