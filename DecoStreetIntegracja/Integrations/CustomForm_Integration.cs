@@ -1,4 +1,4 @@
-﻿using DecoStreetIntegracja.Integrations.Base;
+using DecoStreetIntegracja.Integrations.Base;
 using DecoStreetIntegracja.Utils;
 using System;
 using System.Collections.Generic;
@@ -51,41 +51,62 @@ namespace DecoStreetIntegracja.Integrations
             var attrPRICE = xmlDoc.CreateAttribute("price");
             attrPRICE.Value = sourceNode["price"].InnerText;
             var attrAVAIL = xmlDoc.CreateAttribute("avail");
-            attrAVAIL.Value = int.Parse(sourceNode["quantity"].InnerText) <= 0 ? "99" : "3";
-            var attrWEIGHT = xmlDoc.CreateAttribute("weight");
-            attrWEIGHT.Value = sourceNode["weight"].InnerText;
-            var attrSTOCK = xmlDoc.CreateAttribute("stock");
-            attrSTOCK.Value = sourceNode["quantity"].InnerText;
+            var quantityText = sourceNode["quantity"].InnerText;
+            var quantityValue = string.IsNullOrEmpty(quantityText) ? 0 : int.Parse(quantityText);
+            attrAVAIL.Value = quantityValue <= 0 ? "99" : "3";
+            //var attrWEIGHT = xmlDoc.CreateAttribute("weight");
+            //attrWEIGHT.Value = sourceNode["weight"].InnerText;
+            //var attrSTOCK = xmlDoc.CreateAttribute("stock");
+            //attrSTOCK.Value = sourceNode["quantity"].InnerText;
 
             nodeO.Attributes.Append(attrID);
             nodeO.Attributes.Append(attrURL);
             nodeO.Attributes.Append(attrPRICE);
             nodeO.Attributes.Append(attrAVAIL);
-            nodeO.Attributes.Append(attrWEIGHT);
-            nodeO.Attributes.Append(attrSTOCK);
+            //nodeO.Attributes.Append(attrWEIGHT);
+            //nodeO.Attributes.Append(attrSTOCK);
 
             var nodeCAT = xmlDoc.CreateElement("cat");
-            nodeCAT.InnerXml = string.Format(StringCostants.CDataFormat, sourceNode["categories"].InnerText.Split('|')[0].Trim());
+            nodeCAT.InnerXml = string.Format(StringCostants.CDataFormat, sourceNode["categories"].InnerText.Split(',')[0].Trim());
             var nodeNAME = xmlDoc.CreateElement("name");
             nodeNAME.InnerXml = string.Format(StringCostants.CDataFormat, sourceNode["name"].InnerText);
             var nodeIMGS = xmlDoc.CreateElement("imgs");
             if (sourceNode["images"].InnerText.Length > 0)
             {
-                var nodeMAIN = xmlDoc.CreateElement("main");
-                var attrMAINURL = xmlDoc.CreateAttribute("url");
-                attrMAINURL.Value = sourceNode["images"].InnerText.Replace(" ", "%20");
-                nodeMAIN.Attributes.Append(attrMAINURL);
-                nodeIMGS.AppendChild(nodeMAIN);
+                var images = sourceNode["images"].InnerText.Split('\n').ToArray();
+
+                for (int i = 0; i < images.Length; i++)
+                {
+                    if (string.IsNullOrEmpty(images[i]))
+                        continue;
+
+                    if (i == 0)
+                    {
+                        var nodeMAIN = xmlDoc.CreateElement("main");
+                        var attrMAINURL = xmlDoc.CreateAttribute("url");
+                        attrMAINURL.Value = images[i];
+                        nodeMAIN.Attributes.Append(attrMAINURL);
+                        nodeIMGS.AppendChild(nodeMAIN);
+                    }
+                    else
+                    {
+                        var nodeI = xmlDoc.CreateElement("i");
+                        var attrIRUL = xmlDoc.CreateAttribute("url");
+                        attrIRUL.Value = images[i];
+                        nodeI.Attributes.Append(attrIRUL);
+                        nodeIMGS.AppendChild(nodeI);
+                    }
+                }
             }
 
             var nodeDESC = xmlDoc.CreateElement("desc");
-            nodeDESC.InnerXml = string.Format(StringCostants.CDataFormat, sourceNode["description"].InnerText + (sourceNode["stock"].InnerText == "Dostępny w ciągu 48h" || sourceNode["stock"].InnerText == "dostępny w 48 godzin" || sourceNode["stock"].InnerText == "dostępny w ciągu 48h" ? "" : " " + sourceNode["stock"].InnerText)); //!!
+            nodeDESC.InnerXml = string.Format(StringCostants.CDataFormat, sourceNode["description"].InnerText);// + (sourceNode["stock"].InnerText == "Dostępny w ciągu 48h" || sourceNode["stock"].InnerText == "dostępny w 48 godzin" || sourceNode["stock"].InnerText == "dostępny w ciągu 48h" ? "" : " " + sourceNode["stock"].InnerText)); //!!
             var nodeATTRS = xmlDoc.CreateElement("attrs");
             var nodeANAME1 = xmlDoc.CreateElement("a");
             var attrNAME1 = xmlDoc.CreateAttribute("name");
             attrNAME1.Value = "Producent";
             nodeANAME1.Attributes.Append(attrNAME1);
-            nodeANAME1.InnerXml = string.Format(StringCostants.CDataFormat, sourceNode["brand"].InnerText);
+            //nodeANAME1.InnerXml = string.Format(StringCostants.CDataFormat, sourceNode["brand"].InnerText);
             var nodeANAME2 = xmlDoc.CreateElement("a");
             var attrNAME2 = xmlDoc.CreateAttribute("name");
             attrNAME2.Value = "Kod_producenta";
