@@ -109,15 +109,15 @@ namespace DecoStreetIntegracja.Integrations
             var element = xmlDoc.CreateElement("offers", "http://www.w3.org/2001/XMLSchema-instance");
             xmlDoc.AppendChild(element);
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("URL;Title;Short description;Description;Category;Tags;Vendor;Visibility;Quantity;Buy if empty;Promotion Price;Price Regular;SKU;Barcode;Width;Height;Depth;Diameter;Weight;Image 1;Image 2;Image 3;Image 4;Image 5;Image 6;Image 7;Image 8;Image 9;Image 10;Image 11;Image 12;Image 13;Image 14;Image 15");
+            stringBuilder.AppendLine("URL;Title;Short description;Description;Category;Tags;Vendor;Visibility;Quantity;Buy if empty;Promotion Price;Price Regular;SKU;Barcode;Width;Height;Depth;Diameter;Weight;Image 1;Image 2;Image 3;Image 4;Image 5;Image 6;Image 7;Image 8;Image 9;Image 10;Image 11;Image 12;Image 13;Image 14;Image 15;Image 16");
 
             foreach (XmlNode sourceNode in xmlNodeList)
             {
                 if (EnabledData.enabledD2Categories.Contains(sourceNode["kategoria_glowna"].InnerText))
                 {
                     element.AppendChild(GenerateONode(xmlDoc, sourceNode));
-                    var array = Enumerable.Repeat<string>(string.Empty, 15).ToArray<string>();
-                    for (int index = 0; index < sourceNode["lista_zdjec"].ChildNodes.Count; ++index)
+                    var array = Enumerable.Repeat<string>(string.Empty, 16).ToArray<string>();
+                    for (int index = 0; index < sourceNode["lista_zdjec"].ChildNodes.Count && index < 16; ++index)
                         array[index] = sourceNode["lista_zdjec"].ChildNodes[index].InnerText.Replace(" ", "%20");
                     var str = string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{14};{15};{16};{17};{18};{19};{20};{21};{22};{23};{24};{25};{26};{27};{28};{29};{30};{31};{32};{33}", (object)string.Empty, (object)sourceNode["nazwa"].InnerText, (object)string.Empty, (object)sourceNode["opis_tekstowy"].InnerText, (object)sourceNode["kategoria_glowna"].InnerText, (object)string.Empty, (object)"D2", (object)1, (object)sourceNode["stan"].InnerText.Replace(",", ".").Replace(".00", "").Replace("+", ""), (object)0, (object)sourceNode["cena_brutto"].InnerText.Replace(",", "."), (object)sourceNode["cena_brutto"].InnerText.Replace(",", "."), (object)sourceNode["numer"].InnerText, (object)sourceNode["kod_kreskowy"].InnerText, (object)sourceNode["szerokosc"].InnerText.Split('-')[0], (object)sourceNode["wysokosc"].InnerText.Split('-')[0], (object)sourceNode["glebokosc"].InnerText.Split('-')[0], (object)0, (object)sourceNode["waga"].InnerText.Replace(",", ".").Replace(".000", ".00"), (object)array[0], (object)array[1], (object)array[2], (object)array[3], (object)array[4], (object)array[5], (object)array[6], (object)array[7], (object)array[8], (object)array[9], (object)array[10], (object)array[11], (object)array[12], (object)array[13], (object)array[14]);
                     stringBuilder.AppendLine(str);
