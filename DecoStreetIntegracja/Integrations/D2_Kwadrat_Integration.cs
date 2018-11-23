@@ -16,6 +16,7 @@ namespace DecoStreetIntegracja.Integrations
             destinationFileName = "d2_kwadrat_result.xml";
             sourcePath = "ftp://thyone.iq.pl/updatexml.xml";
             sourceCredentials = new NetworkCredential("dkwadrat_UD2", "zhz907h");
+            
         }
 
         private XmlElement GenerateONode(XmlDocument xmlDoc, XmlNode sourceNode)
