@@ -2,3 +2,5 @@
 *.user
 bin
 obj
+/.vs/DecoStreetIntegracja/v15/Server/sqlite3
+/.vs/DecoStreetIntegracja/v16/Server/sqlite3

@@ -56,6 +56,7 @@
     <Compile Include="Integrations\Base\IntegrationBase.cs" />
     <Compile Include="Integrations\CustomForm_Integration.cs" />
     <Compile Include="Integrations\Durbas_Integration.cs" />
+    <Compile Include="Integrations\Malodesign_Integration.cs" />
     <Compile Include="Utils\EnabledData.cs" />
     <Compile Include="Integrations\Base\IIntegration.cs" />
     <Compile Include="Integrations\Amiou_Integration.cs" />

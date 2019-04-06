@@ -66,6 +66,15 @@ namespace DecoStreetIntegracja.Jobs
             {
 
             }
+
+            try
+            {
+                new Malodesign_Integration();
+            }
+            catch (Exception)
+            {
+
+            }
         }
     }
 }
