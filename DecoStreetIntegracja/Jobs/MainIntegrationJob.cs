@@ -69,6 +69,15 @@ namespace DecoStreetIntegracja.Jobs
 
             try
             {
+                new Adansonia2_Integration();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            try
+            {
                 new Malodesign_Integration();
             }
             catch (Exception)
