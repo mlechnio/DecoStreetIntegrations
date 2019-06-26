@@ -26,6 +26,7 @@ namespace DecoStreetIntegracja.Integrations
             foreach (XmlNode sourceNode in xmlNodeList)
             {
                 sourceNode.Attributes["id"].InnerText = "Adansonia" + sourceNode.Attributes["id"].InnerText;
+                sourceNode.Attributes["price"].InnerText = sourceNode.Attributes["suggestedpricebrutto"].InnerText;
             }
 
             xmlDocument.Save(destinationStream);
