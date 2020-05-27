@@ -1,21 +1,15 @@
 ﻿using DecoStreetIntegracja.Integrations.Base;
 using DecoStreetIntegracja.Utils;
 using System;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Xml;
 
 namespace DecoStreetIntegracja.Integrations
 {
     public class Amiou_Integration : IntegrationBase 
     {
-        public override void Init()
-        {
-            destinationFileName = "amiou_result.xml";
-            sourcePath = "http://85.128.135.34/~amiou/produkty/baza.xml";
-        }
+        internal override string DestinationFileName => "amiou_result.xml";
+
+        internal override string SourcePath => "http://85.128.135.34/~amiou/produkty/baza.xml";
 
         public override void GenerateResult()
         {

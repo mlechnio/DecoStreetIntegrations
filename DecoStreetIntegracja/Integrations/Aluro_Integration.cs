@@ -1,22 +1,15 @@
 ﻿using DecoStreetIntegracja.Integrations.Base;
 using DecoStreetIntegracja.Utils;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace DecoStreetIntegracja.Integrations
 {
     public class Aluro_Integration : IntegrationBase
     {
-        public override void Init()
-        {
-            destinationFileName = "aluro_result.xml";
-            sourcePath = "http://www.partner.aluro.pl/export-xml/aluro_products_export_ldWd8HWmUY.xml";
-        }
+        internal override string DestinationFileName => "aluro_result.xml";
+
+        internal override string SourcePath => "http://www.partner.aluro.pl/export-xml/aluro_products_export_ldWd8HWmUY.xml";
 
         public override void GenerateResult()
         {

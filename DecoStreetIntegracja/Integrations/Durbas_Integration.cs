@@ -1,20 +1,14 @@
 ﻿using DecoStreetIntegracja.Integrations.Base;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace DecoStreetIntegracja.Integrations
 {
     public class Durbas_Integration : IntegrationBase
     {
-        public override void Init()
-        {
-            destinationFileName = "durbas_result.xml";
-            sourcePath = "http://umeblujmieszkanie.pl/products/xml/ceneo";
-        }
+        internal override string DestinationFileName => "durbas_result.xml";
+
+        internal override string SourcePath => "http://umeblujmieszkanie.pl/products/xml/ceneo";
 
         public override void GenerateResult()
         {

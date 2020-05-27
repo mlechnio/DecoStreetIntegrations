@@ -1,46 +1,44 @@
 ﻿using DecoStreetIntegracja.Utils;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DecoStreetIntegracja.Integrations.Base
 {
-    public abstract class IntegrationBase : IIntegration, IDisposable
+    public abstract class IntegrationBase : IDisposable
     {
-        private NetworkCredential destinationCredentials = new NetworkCredential(ConfigurationManager.AppSettings["hosting_login"], ConfigurationManager.AppSettings["hosting_pass"]);
+        private readonly NetworkCredential destinationCredentials = new NetworkCredential(ConfigurationManager.AppSettings["hosting_login"], ConfigurationManager.AppSettings["hosting_pass"]);
 
         internal MemoryStream sourceStream = new MemoryStream();
+
         internal MemoryStream destinationStream = new MemoryStream();
-        internal string destinationFileName;
-        internal string sourcePath;
-        internal NetworkCredential sourceCredentials;
+
+        internal abstract string DestinationFileName { get; }
+
+        internal abstract string SourcePath { get; }
+
+        internal virtual NetworkCredential SourceCredentials { get; }
 
         public IntegrationBase()
         {
-            Init();
             DownloadSourceFile();
             GenerateResult();
             UploadResultFile();
             Dispose();
         }
 
-        public abstract void Init();
         public abstract void GenerateResult();
 
         private void DownloadSourceFile()
         {
             using (var webClient = new WebClient())
             {
-                Console.WriteLine("Rozpoczecie pobierania pliku " + sourcePath);
+                Console.WriteLine("Rozpoczecie pobierania pliku " + SourcePath);
 
-                webClient.Credentials = sourceCredentials;
+                webClient.Credentials = SourceCredentials;
 
-                sourceStream = new MemoryStream(webClient.DownloadData(sourcePath));
+                sourceStream = new MemoryStream(webClient.DownloadData(SourcePath));
 
                 Console.WriteLine("Pobrano");
             }
@@ -48,12 +46,12 @@ namespace DecoStreetIntegracja.Integrations.Base
 
         private void UploadResultFile()
         {
-            Console.WriteLine("Rozpoczecie wysyłania pliku " + destinationFileName + " pod adres " + ConfigurationManager.AppSettings["hosting_address"] + destinationFileName);
+            Console.WriteLine("Rozpoczecie wysyłania pliku " + DestinationFileName + " pod adres " + ConfigurationManager.AppSettings["hosting_address"] + DestinationFileName);
 
             using (var webClient = new WebClient())
             {
                 webClient.Credentials = destinationCredentials;
-                webClient.UploadData(ConfigurationManager.AppSettings["hosting_address"] + destinationFileName, "STOR", destinationStream.ToArray());
+                webClient.UploadData(ConfigurationManager.AppSettings["hosting_address"] + DestinationFileName, "STOR", destinationStream.ToArray());
             }
 
             Console.WriteLine("Zakończono wysyłanie pliku");
@@ -70,6 +68,6 @@ namespace DecoStreetIntegracja.Integrations.Base
             {
                 destinationStream.Dispose();
             }
-        }   
+        }
     }
 }

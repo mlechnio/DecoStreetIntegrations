@@ -1,20 +1,14 @@
 ﻿using DecoStreetIntegracja.Integrations.Base;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace DecoStreetIntegracja.Integrations
 {
     public class Adansonia_Integration : IntegrationBase
     {
-        public override void Init()
-        {
-            destinationFileName = "adansonia_result.xml";
-            sourcePath = "http://admin.adansonia.pl/service/cennik.xml?name=ghost&producer=&category=";
-        }
+        internal override string DestinationFileName => "adansonia_result.xml";
+
+        internal override string SourcePath => "http://admin.adansonia.pl/service/cennik.xml?name=ghost&producer=&category=";
 
         public override void GenerateResult()
         {

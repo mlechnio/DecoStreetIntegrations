@@ -1,22 +1,16 @@
 using DecoStreetIntegracja.Integrations.Base;
 using DecoStreetIntegracja.Utils;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace DecoStreetIntegracja.Integrations
 {
     public class CustomForm_Integration : IntegrationBase
     {
-        public override void Init()
-        {
-            destinationFileName = "customform_result.xml";
-            sourcePath = "https://customform.co/products.xml";
-        }
+        internal override string DestinationFileName => "customform_result.xml";
+
+        internal override string SourcePath => "https://customform.co/products.xml";
 
         public override void GenerateResult()
         {

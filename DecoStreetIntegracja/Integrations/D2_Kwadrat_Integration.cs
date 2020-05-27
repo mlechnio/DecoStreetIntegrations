@@ -1,7 +1,6 @@
 ﻿using DecoStreetIntegracja.Integrations.Base;
 using DecoStreetIntegracja.Utils;
 using System;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -11,12 +10,11 @@ namespace DecoStreetIntegracja.Integrations
 {
     public class D2_Kwadrat_Integration : IntegrationBase
     {
-        public override void Init()
-        {
-            destinationFileName = "d2_kwadrat_result.xml";
-            sourcePath = "ftp://thyone.iq.pl/updatexml.xml";
-            sourceCredentials = new NetworkCredential("dkwadrat_UD2", "zhz907h");
-        }
+        internal override string DestinationFileName => "d2_kwadrat_result.xml";
+
+        internal override string SourcePath => "ftp://thyone.iq.pl/updatexml.xml";
+
+        internal override NetworkCredential SourceCredentials => new NetworkCredential("dkwadrat_UD2", "zhz907h");
 
         private XmlElement GenerateONode(XmlDocument xmlDoc, XmlNode sourceNode)
         {

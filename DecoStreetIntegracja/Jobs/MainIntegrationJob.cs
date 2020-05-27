@@ -84,6 +84,15 @@ namespace DecoStreetIntegracja.Jobs
             {
 
             }
+
+            try
+            {
+                new ArtPol_Integration();
+            }
+            catch (Exception)
+            {
+
+            }
         }
     }
 }
