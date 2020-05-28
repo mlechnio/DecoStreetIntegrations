@@ -12,9 +12,10 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override string SourcePath => "https://customform.co/products.xml";
 
+        internal override string IdPrefix => "CustomForm";
+
         public override void GenerateResult()
         {
-            Console.WriteLine("Rozpoczęcie generowania plików wyjściowych");
             var xmlDocument = new XmlDocument();
             xmlDocument.Load(sourceStream);
             var xmlNodeList = xmlDocument.SelectNodes("//root/item");
@@ -39,7 +40,7 @@ namespace DecoStreetIntegracja.Integrations
         {
             var nodeO = xmlDoc.CreateElement("o");
             var attrID = xmlDoc.CreateAttribute("id");
-            attrID.Value = "CustomForm" + sourceNode["id"].InnerText;
+            attrID.Value = IdPrefix + sourceNode["id"].InnerText;
             var attrURL = xmlDoc.CreateAttribute("url");
             attrURL.Value = "";
             var attrPRICE = xmlDoc.CreateAttribute("price");

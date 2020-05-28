@@ -16,11 +16,13 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override NetworkCredential SourceCredentials => new NetworkCredential("dkwadrat_UD2", "zhz907h");
 
+        internal override string IdPrefix => "DK";
+
         private XmlElement GenerateONode(XmlDocument xmlDoc, XmlNode sourceNode)
         {
             var nodeO = xmlDoc.CreateElement("o");
             var attrID = xmlDoc.CreateAttribute("id");
-            attrID.Value = "DK" + sourceNode["numer"].InnerText;
+            attrID.Value = IdPrefix + sourceNode["numer"].InnerText;
             var attrURL = xmlDoc.CreateAttribute("url");
             attrURL.Value = "";
             var attrPRICE = xmlDoc.CreateAttribute("price");
@@ -97,7 +99,6 @@ namespace DecoStreetIntegracja.Integrations
 
         public override void GenerateResult()
         {
-            Console.WriteLine("Rozpoczęcie generowania plików wyjściowych");
             var xmlDocument = new XmlDocument();
             xmlDocument.Load(sourceStream);
             var xmlNodeList = xmlDocument.SelectNodes("//produkty/produkt");

@@ -11,9 +11,10 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override string SourcePath => "http://85.128.135.34/~amiou/produkty/baza.xml";
 
+        internal override string IdPrefix => throw new NotImplementedException();
+
         public override void GenerateResult()
         {
-            Console.WriteLine("Rozpoczęcie generowania plików wyjściowych");
             var xmlDocument = new XmlDocument();
             xmlDocument.Load(sourceStream);
             var xmlNodeList = xmlDocument.SelectNodes("//offers/o");

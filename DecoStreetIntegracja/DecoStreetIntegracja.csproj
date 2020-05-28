@@ -56,6 +56,7 @@
     <Compile Include="Integrations\Aluro_Integration.cs" />
     <Compile Include="Integrations\ArtPol_Integration.cs" />
     <Compile Include="Integrations\Base\IntegrationBase.cs" />
+    <Compile Include="Integrations\CustomFormGoogle_Integration.cs" />
     <Compile Include="Integrations\CustomForm_Integration.cs" />
     <Compile Include="Integrations\Durbas_Integration.cs" />
     <Compile Include="Integrations\Malodesign_Integration.cs" />

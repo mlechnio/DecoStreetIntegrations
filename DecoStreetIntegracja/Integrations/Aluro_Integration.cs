@@ -11,9 +11,10 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override string SourcePath => "http://www.partner.aluro.pl/export-xml/aluro_products_export_ldWd8HWmUY.xml";
 
+        internal override string IdPrefix => "Aluro";
+
         public override void GenerateResult()
         {
-            Console.WriteLine("Rozpoczęcie generowania plików wyjściowych");
             var xmlDocument = new XmlDocument();
             xmlDocument.Load(sourceStream);
             var xmlNodeList = xmlDocument.SelectNodes("//export_products/product");
@@ -40,7 +41,7 @@ namespace DecoStreetIntegracja.Integrations
         {
             var nodeO = xmlDoc.CreateElement("o");
             var attrID = xmlDoc.CreateAttribute("id");
-            attrID.Value = "Aluro" + sourceNode["symbol"].InnerText;
+            attrID.Value = IdPrefix + sourceNode["symbol"].InnerText;
             var attrURL = xmlDoc.CreateAttribute("url");
             attrURL.Value = "";
             var attrPRICE = xmlDoc.CreateAttribute("price");

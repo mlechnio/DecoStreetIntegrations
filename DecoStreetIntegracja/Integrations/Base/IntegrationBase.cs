@@ -3,6 +3,7 @@ using System;
 using System.Configuration;
 using System.IO;
 using System.Net;
+using System.Xml;
 
 namespace DecoStreetIntegracja.Integrations.Base
 {
@@ -18,17 +19,32 @@ namespace DecoStreetIntegracja.Integrations.Base
 
         internal abstract string SourcePath { get; }
 
+        internal abstract string IdPrefix { get; }
+
         internal virtual NetworkCredential SourceCredentials { get; }
 
         public IntegrationBase()
         {
             DownloadSourceFile();
+            Console.WriteLine("Rozpoczęcie generowania plików wyjściowych");
             GenerateResult();
             UploadResultFile();
             Dispose();
         }
 
-        public abstract void GenerateResult();
+        public virtual void GenerateResult()
+        {
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(sourceStream);
+            var xmlNodeList = xmlDocument.SelectNodes("//group/o");
+
+            foreach (XmlNode sourceNode in xmlNodeList)
+            {
+                sourceNode.Attributes["id"].InnerText = IdPrefix + sourceNode.Attributes["id"].InnerText;
+            }
+
+            xmlDocument.Save(destinationStream);
+        }
 
         private void DownloadSourceFile()
         {
