@@ -49,14 +49,14 @@ namespace DecoStreetIntegracja.Jobs
 
             }
 
-            try
-            {
-                new CustomFormGoogle_Integration();
-            }
-            catch (Exception)
-            {
+            //try
+            //{
+            //    new CustomFormGoogle_Integration();
+            //}
+            //catch (Exception)
+            //{
 
-            }
+            //}
 
             ////
 
