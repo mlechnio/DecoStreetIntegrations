@@ -26,13 +26,18 @@ namespace DecoStreetIntegracja.Integrations
 
             foreach (XmlNode sourceNode in xmlNodeList)
             {
-                if (InStock(sourceNode))
+                if (InStock(sourceNode) && HaveImageLink(sourceNode))
                 {
                     element.AppendChild(GenerateONode(xmlDoc, sourceNode));
                 }
             }
 
             xmlDoc.Save(destinationStream);
+        }
+
+        private bool HaveImageLink(XmlNode sourceNode)
+        {
+            return sourceNode["g:image_link"] != null;
         }
 
         private bool InStock(XmlNode sourceNode)
@@ -44,7 +49,6 @@ namespace DecoStreetIntegracja.Integrations
         {
             var nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
             nsmgr.AddNamespace("g", "http://base.google.com/ns/1.0");
-            Console.WriteLine(sourceNode["g:id"].InnerText);
             var nodeO = xmlDoc.CreateElement("o");
             var attrID = xmlDoc.CreateAttribute("id");
             attrID.Value = IdPrefix + sourceNode["g:id"].InnerText;
@@ -58,7 +62,7 @@ namespace DecoStreetIntegracja.Integrations
 
             nodeO.Attributes.Append(attrID);
             nodeO.Attributes.Append(attrURL);
-            nodeO.Attributes.Append(attrPRICE); // jest wartosc + waluta...
+            nodeO.Attributes.Append(attrPRICE);
             nodeO.Attributes.Append(attrAVAIL);
 
             var nodeCAT = xmlDoc.CreateElement("cat");
@@ -69,13 +73,10 @@ namespace DecoStreetIntegracja.Integrations
 
             var nodeMAIN = xmlDoc.CreateElement("main");
 
-            if (sourceNode["g:image_link"] != null)
-            {
-                var attrMAINURL = xmlDoc.CreateAttribute("url");
-                attrMAINURL.Value = sourceNode["g:image_link"].InnerText;
-                nodeMAIN.Attributes.Append(attrMAINURL);
-                nodeIMGS.AppendChild(nodeMAIN);
-            }
+            var attrMAINURL = xmlDoc.CreateAttribute("url");
+            attrMAINURL.Value = sourceNode["g:image_link"].InnerText;
+            nodeMAIN.Attributes.Append(attrMAINURL);
+            nodeIMGS.AppendChild(nodeMAIN);
 
             var images = sourceNode.SelectNodes("g:additional_image_link", nsmgr);
 

@@ -26,10 +26,21 @@ namespace DecoStreetIntegracja.Integrations.Base
         public IntegrationBase()
         {
             DownloadSourceFile();
+            UploadSourceFileToFtp();
             Console.WriteLine("Rozpoczęcie generowania plików wyjściowych");
             GenerateResult();
             UploadResultFile();
             Dispose();
+        }
+
+        private void UploadSourceFileToFtp()
+        {
+            Console.WriteLine("Backup pliku na FTP");
+            using (var webClient = new WebClient())
+            {
+                webClient.Credentials = destinationCredentials;
+                webClient.UploadData($@"{ConfigurationManager.AppSettings["hosting_address"]}/bak/{DestinationFileName}.{DateTime.Now.ToString("yyyyMMddTHHmm")}.xml", "STOR", sourceStream.ToArray());
+            }
         }
 
         public virtual void GenerateResult()
