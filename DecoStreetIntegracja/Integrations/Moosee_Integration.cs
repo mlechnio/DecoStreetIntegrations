@@ -12,7 +12,7 @@ namespace DecoStreetIntegracja.Integrations
 {
     public class Moosee_Integration : IntegrationBase
     {
-        internal override string DestinationFileName => "moosee_result.xml";
+        internal override string DestinationFileName => "moosee_oswietlenie_result.xml";
 
         internal override string SourcePath => "ftp://kingbath_plikixml@ftp.kingbath.nazwa.pl/kinghomexml.xml";
 
