@@ -9,9 +9,9 @@ namespace DecoStreetIntegracja.Integrations
     {
         internal override string DestinationFileName => "customformgoogle_result.xml";
 
-        internal override string SourcePath => "https://customform.co/wp-content/uploads/googlefeeds/google.xml";
+        internal override string SourcePath => "http://customform.co/wp-content/uploads/googlefeeds/google.xml";
 
-        internal override string IdPrefix => "CF";
+        internal override string IdPrefix => "CFA";
 
         public override void GenerateResult()
         {
@@ -66,7 +66,8 @@ namespace DecoStreetIntegracja.Integrations
             nodeO.Attributes.Append(attrAVAIL);
 
             var nodeCAT = xmlDoc.CreateElement("cat");
-            nodeCAT.InnerXml = string.Format(StringCostants.CDataFormat, sourceNode["g:google_product_category"].InnerText);
+            //var category = sourceNode["g:google_product_category"].InnerText;
+            nodeCAT.InnerXml = string.Format(StringCostants.CDataFormat, "Custom");
             var nodeNAME = xmlDoc.CreateElement("name");
             nodeNAME.InnerXml = string.Format(StringCostants.CDataFormat, sourceNode["title"].InnerText);
             var nodeIMGS = xmlDoc.CreateElement("imgs");
@@ -96,7 +97,7 @@ namespace DecoStreetIntegracja.Integrations
             var attrNAME1 = xmlDoc.CreateAttribute("name");
             attrNAME1.Value = "Producent";
             nodeANAME1.Attributes.Append(attrNAME1);
-            //nodeANAME1.InnerXml = string.Format(StringCostants.CDataFormat, sourceNode["brand"].InnerText);
+            nodeANAME1.InnerXml = string.Format(StringCostants.CDataFormat, "CustomForm");
             var nodeANAME2 = xmlDoc.CreateElement("a");
             var attrNAME2 = xmlDoc.CreateAttribute("name");
             attrNAME2.Value = "Kod_producenta";

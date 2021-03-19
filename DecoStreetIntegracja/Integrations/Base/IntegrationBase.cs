@@ -26,6 +26,10 @@ namespace DecoStreetIntegracja.Integrations.Base
         public IntegrationBase()
         {
             DownloadSourceFile();
+            //var fileStream = File.Create("local.xml");
+            //sourceStream.Seek(0, SeekOrigin.Begin);
+            //sourceStream.CopyTo(fileStream);
+            //fileStream.Close();
             UploadSourceFileToFtp();
             Console.WriteLine("Rozpoczęcie generowania plików wyjściowych");
             GenerateResult();

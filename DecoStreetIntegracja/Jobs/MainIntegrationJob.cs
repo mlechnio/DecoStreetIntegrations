@@ -22,23 +22,23 @@ namespace DecoStreetIntegracja.Jobs
 
             }
 
-            try
-            {
-                new Adansonia_Integration();
-            }
-            catch (Exception)
-            {
+            //try
+            //{
+            //    new Adansonia_Integration();
+            //}
+            //catch (Exception)
+            //{
 
-            }
+            //}
 
-            try
-            {
-                new Adansonia2_Integration();
-            }
-            catch (Exception)
-            {
+            //try
+            //{
+            //    new Adansonia2_Integration();
+            //}
+            //catch (Exception)
+            //{
 
-            }
+            //}
 
             try
             {
