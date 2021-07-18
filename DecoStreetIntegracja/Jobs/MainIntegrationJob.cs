@@ -35,7 +35,7 @@ namespace DecoStreetIntegracja.Jobs
             {
                 new Moosee_Integration();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }

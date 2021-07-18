@@ -65,6 +65,9 @@ namespace DecoStreetIntegracja.Integrations.Base
         {
             using (var webClient = new WebClient())
             {
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
                 Console.WriteLine("Rozpoczecie pobierania pliku " + SourcePath);
 
                 webClient.Credentials = SourceCredentials;

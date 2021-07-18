@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Integrations\Adansonia2_Integration.cs" />
     <Compile Include="Integrations\Adansonia_Integration.cs" />
+    <Compile Include="Integrations\AltavolaDesign_Integration.cs" />
     <Compile Include="Integrations\Aluro_Integration.cs" />
     <Compile Include="Integrations\ArtPol_Integration.cs" />
     <Compile Include="Integrations\Base\IntegrationBase.cs" />
