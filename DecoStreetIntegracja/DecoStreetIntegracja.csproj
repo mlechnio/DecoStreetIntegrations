@@ -60,6 +60,7 @@
     <Compile Include="Integrations\CustomFormGoogle_Integration.cs" />
     <Compile Include="Integrations\CustomForm_Integration.cs" />
     <Compile Include="Integrations\Durbas_Integration.cs" />
+    <Compile Include="Integrations\Kingshome_Integration.cs" />
     <Compile Include="Integrations\Malodesign_Integration.cs" />
     <Compile Include="Integrations\Moosee_Integration.cs" />
     <Compile Include="Utils\EnabledData.cs" />

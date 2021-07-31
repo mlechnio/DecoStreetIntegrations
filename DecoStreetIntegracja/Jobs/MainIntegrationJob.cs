@@ -40,6 +40,14 @@ namespace DecoStreetIntegracja.Jobs
 
             }
 
+            try
+            {
+                new Kingshome_Integration();
+            }
+            catch (Exception)
+            {
+
+            }
             //try
             //{
             //    new CustomFormGoogle_Integration();
