@@ -56,6 +56,15 @@ namespace DecoStreetIntegracja.Jobs
             //{
 
             //}
+
+            //try
+            //{
+            //    new Victoria_Integration();
+            //}
+            //catch (Exception ex)
+            //{
+
+            //}
         }
     }
 }

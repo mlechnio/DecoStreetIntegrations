@@ -63,6 +63,7 @@
     <Compile Include="Integrations\Kingshome_Integration.cs" />
     <Compile Include="Integrations\Malodesign_Integration.cs" />
     <Compile Include="Integrations\Moosee_Integration.cs" />
+    <Compile Include="Integrations\Victoria_Integration.cs" />
     <Compile Include="Utils\EnabledData.cs" />
     <Compile Include="Integrations\Amiou_Integration.cs" />
     <Compile Include="Integrations\D2_Kwadrat_Integration.cs" />
