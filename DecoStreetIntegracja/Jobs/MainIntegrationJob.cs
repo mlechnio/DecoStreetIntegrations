@@ -10,8 +10,26 @@ namespace DecoStreetIntegracja.Jobs
         {
             RunIntegrations();
         }
-        
+
         public void RunIntegrations()
+        {
+            RunTest();
+            //RunProd();
+        }
+
+        private void RunTest()
+        {
+            try
+            {
+                new D2_Kwadrat_IntegratorShoper();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void RunProd()
         {
             try
             {
@@ -48,6 +66,7 @@ namespace DecoStreetIntegracja.Jobs
             {
 
             }
+
             //try
             //{
             //    new CustomFormGoogle_Integration();

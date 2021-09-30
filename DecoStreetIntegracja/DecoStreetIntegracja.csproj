@@ -41,6 +41,9 @@
     <Reference Include="Quartz">
       <HintPath>..\packages\Quartz.2.5.0\lib\net40\Quartz.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -56,14 +59,21 @@
     <Compile Include="Integrations\AltavolaDesign_Integration.cs" />
     <Compile Include="Integrations\Aluro_Integration.cs" />
     <Compile Include="Integrations\ArtPol_Integration.cs" />
+    <Compile Include="Integrations\Base\IntegratorShoperBase.cs" />
     <Compile Include="Integrations\Base\IntegrationBase.cs" />
     <Compile Include="Integrations\CustomFormGoogle_Integration.cs" />
     <Compile Include="Integrations\CustomForm_Integration.cs" />
+    <Compile Include="Integrations\D2_Kwadrat_IntegratorShoper.cs" />
     <Compile Include="Integrations\Durbas_Integration.cs" />
     <Compile Include="Integrations\Kingshome_Integration.cs" />
     <Compile Include="Integrations\Malodesign_Integration.cs" />
     <Compile Include="Integrations\Moosee_Integration.cs" />
     <Compile Include="Integrations\Victoria_Integration.cs" />
+    <Compile Include="Integrator\ApiModels\ProductListResponse.cs" />
+    <Compile Include="Integrator\Models\AuthResponse.cs" />
+    <Compile Include="Integrator\Models\Product.cs" />
+    <Compile Include="Integrator\Models\ProductForUpdate.cs" />
+    <Compile Include="Integrator\Models\ProductStock.cs" />
     <Compile Include="Utils\EnabledData.cs" />
     <Compile Include="Integrations\Amiou_Integration.cs" />
     <Compile Include="Integrations\D2_Kwadrat_Integration.cs" />
