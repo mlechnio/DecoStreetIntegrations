@@ -72,7 +72,9 @@
     <Compile Include="Integrator\ApiModels\ProductListResponse.cs" />
     <Compile Include="Integrator\Models\AuthResponse.cs" />
     <Compile Include="Integrator\Models\Product.cs" />
+    <Compile Include="Integrator\Models\ProductForInsert.cs" />
     <Compile Include="Integrator\Models\ProductForUpdate.cs" />
+    <Compile Include="Integrator\Models\ProductImageForInsert.cs" />
     <Compile Include="Integrator\Models\ProductStock.cs" />
     <Compile Include="Utils\EnabledData.cs" />
     <Compile Include="Integrations\Amiou_Integration.cs" />

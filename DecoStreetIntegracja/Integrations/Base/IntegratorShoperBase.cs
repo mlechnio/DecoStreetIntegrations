@@ -9,6 +9,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Xml;
 
 namespace DecoStreetIntegracja.Integrations.Base
@@ -27,19 +28,25 @@ namespace DecoStreetIntegracja.Integrations.Base
 
         internal virtual NetworkCredential SourceCredentials { get; }
 
+        internal List<string> NewProducts { get; set; } = new List<string>();
+
         public IntegratorShoperBase()
         {
             AuthToken = GetAuthToken();
             DownloadSourceFile();
             Console.WriteLine("Rozpoczęcie generowania plików wyjściowych");
-            UpdateProducts();
+            Process();
             Dispose();
         }
 
         internal void ProcessProduct(XmlNode sourceNode)
         {
-            Console.WriteLine($"Processing product: {sourceNode["numer"].InnerText}");
-            var existingProduct = GetExistingProduct(IdPrefix + sourceNode["numer"].InnerText);
+            var productCode = IdPrefix + sourceNode["numer"].InnerText;
+            Console.WriteLine($"Processing product: {productCode}");
+
+            Thread.Sleep(1000);
+
+            var existingProduct = GetExistingProduct(productCode);
 
             if (existingProduct != null)
             {
@@ -55,14 +62,25 @@ namespace DecoStreetIntegracja.Integrations.Base
             }
             else
             {
-                //      add product
-                //      add product images
+                var product = GenerateProductForInsert(sourceNode);
+                var product_id = InsertProduct(product);
+
+                foreach (var item in GenerateImagesForInsert(product_id, sourceNode))
+                {
+                    InsertProductImage(item);
+                }
+
+                NewProducts.Add(productCode);
             }
         }
 
-        public abstract void UpdateProducts();
+        internal abstract IEnumerable<ProductImageForInsert> GenerateImagesForInsert(int product_id, XmlNode sourceNode);
 
-        public abstract ProductForUpdate GenerateProductForUpdate(Product product, XmlNode sourceNode);
+        internal abstract ProductForInsert GenerateProductForInsert(XmlNode sourceNode);
+
+        internal abstract void Process();
+
+        internal abstract ProductForUpdate GenerateProductForUpdate(Product product, XmlNode sourceNode);
 
         private Product GetExistingProduct(string productCode)
         {
@@ -77,6 +95,42 @@ namespace DecoStreetIntegracja.Integrations.Base
             }
 
             return default;
+        }
+
+        private int InsertProduct(ProductForInsert product)
+        {
+            var client = new RestClient(Api);
+            client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", AuthToken));
+            var request = new RestRequest($"products", Method.POST);
+
+            request.AddJsonBody(product);
+
+            var response = client.Execute<int>(request);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return response.Data;
+            }
+
+            return 0;
+        }
+
+        private int InsertProductImage(ProductImageForInsert image)
+        {
+            var client = new RestClient(Api);
+            client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", AuthToken));
+            var request = new RestRequest($"product-images", Method.POST);
+
+            request.AddJsonBody(image);
+
+            var response = client.Execute<int>(request);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return response.Data;
+            }
+
+            return 0;
         }
 
         private bool UpdateProduct(ProductForUpdate product)

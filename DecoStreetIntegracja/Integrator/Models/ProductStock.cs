@@ -4,5 +4,6 @@
     {
         public decimal price { get; set; }
         public decimal stock { get; set; }
+        public decimal weight { get; set; }
     }
 }
