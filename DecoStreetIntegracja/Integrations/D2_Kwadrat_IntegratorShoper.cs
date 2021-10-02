@@ -75,7 +75,7 @@ namespace DecoStreetIntegracja.Integrations
             {
                 active = true,
                 name = sourceNode["nazwa"].InnerText,
-                description = sourceNode["opis_tekstowy"].InnerText
+                description = sourceNode["opis_tekstowy"].InnerText,
             };
 
             return product;

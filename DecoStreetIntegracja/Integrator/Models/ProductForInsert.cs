@@ -17,6 +17,8 @@ namespace DecoStreetIntegracja.Integrator.Models
         public ProductStock stock { get; set; } = new ProductStock();
 
         public ProductTranslations translations { get; set; } = new ProductTranslations();
+
+        public Dictionary<string, string> attributes { get; set; } = new Dictionary<string, string>(); // maybe later
     }
 
     public class ProductTranslations
@@ -31,5 +33,7 @@ namespace DecoStreetIntegracja.Integrator.Models
         public string description { get; set; }
 
         public bool active { get; set; }
+
+        public string seo_url { get; set; } // maybe later
     }
 }

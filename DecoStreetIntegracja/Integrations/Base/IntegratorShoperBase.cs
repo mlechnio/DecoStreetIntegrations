@@ -44,6 +44,11 @@ namespace DecoStreetIntegracja.Integrations.Base
             var productCode = IdPrefix + sourceNode["numer"].InnerText;
             Console.WriteLine($"Processing product: {productCode}");
 
+            //if ("DK180315" != productCode)
+            //{
+            //    return;
+            //}
+
             Thread.Sleep(1000);
 
             var existingProduct = GetExistingProduct(productCode);
@@ -65,8 +70,14 @@ namespace DecoStreetIntegracja.Integrations.Base
                 var product = GenerateProductForInsert(sourceNode);
                 var product_id = InsertProduct(product);
 
+                if (product_id == 0)
+                {
+                    return;
+                }
+
                 foreach (var item in GenerateImagesForInsert(product_id, sourceNode))
                 {
+                    Thread.Sleep(1000);
                     InsertProductImage(item);
                 }
 
@@ -80,7 +91,7 @@ namespace DecoStreetIntegracja.Integrations.Base
 
         internal abstract void Process();
 
-        internal abstract ProductForUpdate GenerateProductForUpdate(Product product, XmlNode sourceNode);
+        internal abstract ProductForUpdate GenerateProductForUpdate(Product existingProduct, XmlNode sourceNode);
 
         private Product GetExistingProduct(string productCode)
         {
@@ -111,7 +122,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             {
                 return response.Data;
             }
-
+            // log that something went wrong
             return 0;
         }
 
@@ -129,7 +140,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             {
                 return response.Data;
             }
-
+            // log that something went wrong
             return 0;
         }
 
@@ -147,7 +158,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             {
                 return response.Data;
             }
-
+            // log that something went wrong
             return false;
         }
 

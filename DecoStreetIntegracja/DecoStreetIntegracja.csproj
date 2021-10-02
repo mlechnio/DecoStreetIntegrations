@@ -65,8 +65,10 @@
     <Compile Include="Integrations\CustomForm_Integration.cs" />
     <Compile Include="Integrations\D2_Kwadrat_IntegratorShoper.cs" />
     <Compile Include="Integrations\Durbas_Integration.cs" />
+    <Compile Include="Integrations\Kingshome_IntegrationShoper.cs" />
     <Compile Include="Integrations\Kingshome_Integration.cs" />
     <Compile Include="Integrations\Malodesign_Integration.cs" />
+    <Compile Include="Integrations\Moosee_IntegrationShoper.cs" />
     <Compile Include="Integrations\Moosee_Integration.cs" />
     <Compile Include="Integrations\Victoria_Integration.cs" />
     <Compile Include="Integrator\ApiModels\ProductListResponse.cs" />

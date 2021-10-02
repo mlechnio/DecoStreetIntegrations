@@ -19,9 +19,27 @@ namespace DecoStreetIntegracja.Jobs
 
         private void RunTest()
         {
+            //try
+            //{
+            //    new D2_Kwadrat_IntegratorShoper();
+            //}
+            //catch (Exception ex)
+            //{
+
+            //}
+
+            //try
+            //{
+            //    new Moosee_IntegrationShoper();
+            //}
+            //catch (Exception ex)
+            //{
+
+            //}
+
             try
             {
-                new D2_Kwadrat_IntegratorShoper();
+                new Kingshome_IntegrationShoper();
             }
             catch (Exception ex)
             {
