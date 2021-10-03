@@ -71,7 +71,7 @@ namespace DecoStreetIntegracja.Integrations
                 name = sourceNode["nazwa"].InnerText,
                 description = sourceNode["opis"].InnerText,
             };
-
+            
             return product;
         }
 
@@ -82,6 +82,7 @@ namespace DecoStreetIntegracja.Integrations
 
             if (existingProduct.stock.price != priceNew || existingProduct.stock.stock != stockNew)
             {
+                Logger.Log($"UPDATING {existingProduct.code}, PRICE: {existingProduct.stock.price} -> {priceNew}, STOCK: {existingProduct.stock.stock} -> {stockNew}");
                 return new ProductForUpdate
                 {
                     product_id = existingProduct.product_id,

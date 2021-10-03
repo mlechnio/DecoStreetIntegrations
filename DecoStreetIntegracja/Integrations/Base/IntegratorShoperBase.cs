@@ -28,13 +28,10 @@ namespace DecoStreetIntegracja.Integrations.Base
 
         internal virtual NetworkCredential SourceCredentials { get; }
 
-        internal List<string> NewProducts { get; set; } = new List<string>();
-
         public IntegratorShoperBase()
         {
             AuthToken = GetAuthToken();
             DownloadSourceFile();
-            Console.WriteLine("Rozpoczęcie generowania plików wyjściowych");
             Process();
             Dispose();
         }
@@ -42,46 +39,50 @@ namespace DecoStreetIntegracja.Integrations.Base
         internal void ProcessProduct(XmlNode sourceNode)
         {
             var productCode = IdPrefix + sourceNode["numer"].InnerText;
-            Console.WriteLine($"Processing product: {productCode}");
-
-            //if ("DK180315" != productCode)
-            //{
-            //    return;
-            //}
-
-            Thread.Sleep(1000);
-
-            var existingProduct = GetExistingProduct(productCode);
-
-            if (existingProduct != null)
+            try
             {
-                var productForUpdate = GenerateProductForUpdate(existingProduct, sourceNode);
-                if (productForUpdate != null)
+                Console.WriteLine($"Processing product: {productCode}");
+
+                Thread.Sleep(1000);
+
+                var existingProduct = GetExistingProduct(productCode);
+
+                if (existingProduct != null)
                 {
-                    UpdateProduct(productForUpdate);
+                    var productForUpdate = GenerateProductForUpdate(existingProduct, sourceNode);
+                    if (productForUpdate != null)
+                    {
+                        UpdateProduct(productForUpdate);
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
                 else
                 {
-                    return;
+                    var product = GenerateProductForInsert(sourceNode);
+                    var product_id = InsertProduct(product);
+
+                    if (product_id == 0)
+                    {
+                        return;
+                    }
+
+                    Logger.Log($"ADDED {product.code}, PRICE: {product.stock.price}, QUANTITY: {product.stock.stock}");
+                    Logger.NewProducts.Add(product.code);
+
+                    foreach (var item in GenerateImagesForInsert(product_id, sourceNode))
+                    {
+                        Thread.Sleep(1000);
+                        InsertProductImage(item);
+                    }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                var product = GenerateProductForInsert(sourceNode);
-                var product_id = InsertProduct(product);
-
-                if (product_id == 0)
-                {
-                    return;
-                }
-
-                foreach (var item in GenerateImagesForInsert(product_id, sourceNode))
-                {
-                    Thread.Sleep(1000);
-                    InsertProductImage(item);
-                }
-
-                NewProducts.Add(productCode);
+                Logger.Log($"ERROR {productCode}, EXCEPTION: {ex.Message}");
+                Logger.LogException(ex);
             }
         }
 

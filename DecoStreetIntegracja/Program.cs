@@ -3,6 +3,7 @@ using DecoStreetIntegracja.Jobs;
 using DecoStreetIntegracja.Utils;
 using Quartz;
 using Quartz.Impl;
+using System.Collections.Generic;
 using System.Configuration;
 
 namespace DecoStreetIntegracja
@@ -23,8 +24,8 @@ namespace DecoStreetIntegracja
                             .Build();
 
             scheduler.ScheduleJob(job, trigger);
-
-            new MainIntegrationJob().RunIntegrations();
+            
+            new MainIntegrationJob().Execute(null);
         }
     }
 }
