@@ -52,49 +52,34 @@ namespace DecoStreetIntegracja.Integrations
             return productImages;
         }
 
-        internal override ProductForInsert GenerateProductForInsert(XmlNode sourceNode)
+        internal override string GetDescriptionFromNode(XmlNode sourceNode)
         {
-            var product = new ProductForInsert();
-            var price = decimal.Parse(sourceNode["cena_detaliczna_brutto_bez_waluty"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
-            var stock = decimal.Parse(sourceNode["stan"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
-            var weight = decimal.Parse(sourceNode["waga"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
-
-            product.code = IdPrefix + sourceNode["numer"].InnerText;
-            product.pkwiu = string.Empty;
-            product.stock.stock = stock;
-            product.stock.price = price;
-            product.stock.weight = weight;
-
-            product.translations.pl_PL = new Translation
-            {
-                active = true,
-                name = sourceNode["nazwa"].InnerText,
-                description = sourceNode["opis"].InnerText,
-            };
-            
-            return product;
+            return sourceNode["opis"].InnerText;
         }
 
-        internal override ProductForUpdate GenerateProductForUpdate(Product existingProduct, XmlNode sourceNode)
+        internal override string GetIdFromNode(XmlNode sourceNode)
         {
-            var priceNew = decimal.Parse(sourceNode["cena_detaliczna_brutto_bez_waluty"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
-            var stockNew = decimal.Parse(sourceNode["stan"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
+            return sourceNode["numer"].InnerText;
+        }
 
-            if (existingProduct.stock.price != priceNew || existingProduct.stock.stock != stockNew)
-            {
-                Logger.Log($"UPDATING {existingProduct.code}, PRICE: {existingProduct.stock.price} -> {priceNew}, STOCK: {existingProduct.stock.stock} -> {stockNew}");
-                return new ProductForUpdate
-                {
-                    product_id = existingProduct.product_id,
-                    stock = new ProductStock
-                    {
-                        price = priceNew,
-                        stock = stockNew,
-                    }
-                };
-            }
+        internal override string GetNameFromNode(XmlNode sourceNode)
+        {
+            return sourceNode["nazwa"].InnerText;
+        }
 
-            return default;
+        internal override decimal GetPriceFromNode(XmlNode sourceNode)
+        {
+            return decimal.Parse(sourceNode["cena_detaliczna_brutto_bez_waluty"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
+        }
+
+        internal override decimal GetStockFromNode(XmlNode sourceNode)
+        {
+            return decimal.Parse(sourceNode["stan"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
+        }
+
+        internal override decimal GetWeightFromNode(XmlNode sourceNode)
+        {
+            return decimal.Parse(sourceNode["waga"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
         }
 
         internal override void Process()

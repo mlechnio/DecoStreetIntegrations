@@ -37,50 +37,6 @@ namespace DecoStreetIntegracja.Integrations
             }
         }
 
-        internal override ProductForUpdate GenerateProductForUpdate(Product existingProduct, XmlNode sourceNode)
-        {
-            var priceNew = decimal.Parse(sourceNode["cena_brutto"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
-            var stockNew = decimal.Parse(sourceNode["stan"].InnerText.Replace(",", ".").Replace(".00", "").Replace("+", ""), CultureInfo.InvariantCulture);
-
-            if (existingProduct.stock.price != priceNew || existingProduct.stock.stock != stockNew)
-            {
-                return new ProductForUpdate
-                {
-                    product_id = existingProduct.product_id,
-                    stock = new ProductStock
-                    {
-                        price = priceNew,
-                        stock = stockNew,
-                    }
-                };
-            }
-
-            return default;
-        }
-
-        internal override ProductForInsert GenerateProductForInsert(XmlNode sourceNode)
-        {
-            var product = new ProductForInsert();
-            var price = decimal.Parse(sourceNode["cena_brutto"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
-            var stock = decimal.Parse(sourceNode["stan"].InnerText.Replace(",", ".").Replace(".00", "").Replace("+", ""), CultureInfo.InvariantCulture);
-            var weight = decimal.Parse(sourceNode["waga"].InnerText.Replace(",", ".").Replace(".000", ".00"), CultureInfo.InvariantCulture);
-
-            product.code = IdPrefix + sourceNode["numer"].InnerText;
-            product.pkwiu = string.Empty;
-            product.stock.stock = stock;
-            product.stock.price = price;
-            product.stock.weight = weight;
-
-            product.translations.pl_PL = new Translation
-            {
-                active = true,
-                name = sourceNode["nazwa"].InnerText,
-                description = sourceNode["opis_tekstowy"].InnerText,
-            };
-
-            return product;
-        }
-
         internal override IEnumerable<ProductImageForInsert> GenerateImagesForInsert(int product_id, XmlNode sourceNode)
         {
             var productImages = new List<ProductImageForInsert>();
@@ -111,6 +67,36 @@ namespace DecoStreetIntegracja.Integrations
             }
 
             return productImages;
+        }
+
+        internal override decimal GetPriceFromNode(XmlNode sourceNode)
+        {
+            return decimal.Parse(sourceNode["cena_brutto"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
+        }
+
+        internal override decimal GetStockFromNode(XmlNode sourceNode)
+        {
+            return decimal.Parse(sourceNode["stan"].InnerText.Replace(",", ".").Replace(".00", "").Replace("+", ""), CultureInfo.InvariantCulture);
+        }
+
+        internal override decimal GetWeightFromNode(XmlNode sourceNode)
+        {
+            return decimal.Parse(sourceNode["waga"].InnerText.Replace(",", ".").Replace(".000", ".00"), CultureInfo.InvariantCulture);
+        }
+
+        internal override string GetIdFromNode(XmlNode sourceNode)
+        {
+            return sourceNode["numer"].InnerText;
+        }
+
+        internal override string GetNameFromNode(XmlNode sourceNode)
+        {
+            return sourceNode["nazwa"].InnerText;
+        }
+
+        internal override string GetDescriptionFromNode(XmlNode sourceNode)
+        {
+            return sourceNode["opis_tekstowy"].InnerText;
         }
     }
 }

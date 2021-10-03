@@ -38,7 +38,7 @@ namespace DecoStreetIntegracja.Integrations.Base
 
         internal void ProcessProduct(XmlNode sourceNode)
         {
-            var productCode = IdPrefix + sourceNode["numer"].InnerText;
+            var productCode = IdPrefix + GetIdFromNode(sourceNode);
             try
             {
                 Console.WriteLine($"Processing product: {productCode}");
@@ -88,11 +88,64 @@ namespace DecoStreetIntegracja.Integrations.Base
 
         internal abstract IEnumerable<ProductImageForInsert> GenerateImagesForInsert(int product_id, XmlNode sourceNode);
 
-        internal abstract ProductForInsert GenerateProductForInsert(XmlNode sourceNode);
+        private ProductForInsert GenerateProductForInsert(XmlNode sourceNode)
+        {
+            var product = new ProductForInsert();
+            var price = GetPriceFromNode(sourceNode);
+            var stock = GetStockFromNode(sourceNode);
+            var weight = GetWeightFromNode(sourceNode);
+
+            product.code = IdPrefix + GetIdFromNode(sourceNode);
+            product.pkwiu = string.Empty;
+            product.stock.stock = stock;
+            product.stock.price = price;
+            product.stock.weight = weight;
+
+            product.translations.pl_PL = new Translation
+            {
+                active = true,
+                name = GetNameFromNode(sourceNode),
+                description = GetDescriptionFromNode(sourceNode),
+            };
+
+            return product;
+        }
 
         internal abstract void Process();
 
-        internal abstract ProductForUpdate GenerateProductForUpdate(Product existingProduct, XmlNode sourceNode);
+        internal abstract decimal GetPriceFromNode(XmlNode sourceNode);
+
+        internal abstract decimal GetStockFromNode(XmlNode sourceNode);
+
+        internal abstract decimal GetWeightFromNode(XmlNode sourceNode);
+
+        internal abstract string GetIdFromNode(XmlNode sourceNode);
+
+        internal abstract string GetNameFromNode(XmlNode sourceNode);
+
+        internal abstract string GetDescriptionFromNode(XmlNode sourceNode);
+
+        private ProductForUpdate GenerateProductForUpdate(Product existingProduct, XmlNode sourceNode)
+        {
+            var priceNew = GetPriceFromNode(sourceNode);
+            var stockNew = GetStockFromNode(sourceNode);
+
+            if (existingProduct.stock.price != priceNew || existingProduct.stock.stock != stockNew)
+            {
+                Logger.Log($"UPDATING <strong>{existingProduct.code}</strong>, PRICE: {existingProduct.stock.price} -> <strong>{priceNew}</strong>, STOCK: {existingProduct.stock.stock} -> <strong>{stockNew}</strong>");
+                return new ProductForUpdate
+                {
+                    product_id = existingProduct.product_id,
+                    stock = new ProductStock
+                    {
+                        price = priceNew,
+                        stock = stockNew,
+                    }
+                };
+            }
+
+            return default;
+        }
 
         private Product GetExistingProduct(string productCode)
         {
