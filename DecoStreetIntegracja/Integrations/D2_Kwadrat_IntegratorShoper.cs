@@ -28,12 +28,13 @@ namespace DecoStreetIntegracja.Integrations
             xmlDocument.Load(sourceStream);
             var xmlNodeList = xmlDocument.SelectNodes("//produkty/produkt");
 
-            foreach (XmlNode sourceNode in xmlNodeList)
+            var list = xmlNodeList.Cast<XmlNode>().Where(x => EnabledData.enabledD2Categories.Contains(x["kategoria_glowna"].InnerText)).ToList();
+
+            Logger.Log($"Products process: {list.Count}");
+
+            for (int i = 0; i < list.Count; i++)
             {
-                if (EnabledData.enabledD2Categories.Contains(sourceNode["kategoria_glowna"].InnerText))
-                {
-                    ProcessProduct(sourceNode);
-                }
+                ProcessProduct(list[i]);
             }
         }
 
@@ -97,6 +98,11 @@ namespace DecoStreetIntegracja.Integrations
         internal override string GetDescriptionFromNode(XmlNode sourceNode)
         {
             return sourceNode["opis_tekstowy"].InnerText;
+        }
+
+        internal override int GetDeliveryId()
+        {
+            return 11;
         }
     }
 }

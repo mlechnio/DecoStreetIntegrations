@@ -3,6 +3,7 @@ using DecoStreetIntegracja.Integrator.Models;
 using DecoStreetIntegracja.Utils;
 using RestSharp;
 using RestSharp.Authenticators;
+using RestSharp.Serializers;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -81,7 +82,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             }
             catch (Exception ex)
             {
-                Logger.Log($"ERROR {productCode}, EXCEPTION: {ex.Message}");
+                Logger.Log($"ERROR {productCode}, <strong>EXCEPTION</strong>: {ex.Message}");
                 Logger.LogException(ex);
             }
         }
@@ -100,6 +101,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             product.stock.stock = stock;
             product.stock.price = price;
             product.stock.weight = weight;
+            product.stock.delivery_id = GetDeliveryId();
 
             product.translations.pl_PL = new Translation
             {
@@ -125,6 +127,8 @@ namespace DecoStreetIntegracja.Integrations.Base
 
         internal abstract string GetDescriptionFromNode(XmlNode sourceNode);
 
+        internal abstract int GetDeliveryId();
+
         private ProductForUpdate GenerateProductForUpdate(Product existingProduct, XmlNode sourceNode)
         {
             var priceNew = GetPriceFromNode(sourceNode);
@@ -140,6 +144,7 @@ namespace DecoStreetIntegracja.Integrations.Base
                     {
                         price = priceNew,
                         stock = stockNew,
+                        delivery_id = GetDeliveryId(),
                     }
                 };
             }
@@ -154,12 +159,16 @@ namespace DecoStreetIntegracja.Integrations.Base
             var request = new RestRequest("products?filters={\"stock.code\":\"" + productCode + "\"}", Method.GET);
             var response = client.Execute<ProductListResponse>(request);
 
-            if (response.StatusCode == HttpStatusCode.OK && response.Data.count > 0)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
-                return response.Data.list.SingleOrDefault(x => x.code == productCode);
+                if (response.Data.count > 0)
+                {
+                    return response.Data.list.SingleOrDefault(x => x.code == productCode);
+                }
+                return default;
             }
 
-            return default;
+            throw new Exception($"GetExistingProduct, StatusCode: {response.StatusCode}, Content: {response.Content}, Item: {productCode}");
         }
 
         private int InsertProduct(ProductForInsert product)
@@ -176,8 +185,8 @@ namespace DecoStreetIntegracja.Integrations.Base
             {
                 return response.Data;
             }
-            // log that something went wrong
-            return 0;
+
+            throw new Exception($"InsertProduct, StatusCode: {response.StatusCode}, Content: {response.Content}, Item: {new JsonSerializer().Serialize(product)}");
         }
 
         private int InsertProductImage(ProductImageForInsert image)
@@ -194,8 +203,8 @@ namespace DecoStreetIntegracja.Integrations.Base
             {
                 return response.Data;
             }
-            // log that something went wrong
-            return 0;
+
+            throw new Exception($"InsertProductImage, StatusCode: {response.StatusCode}, Content: {response.Content}, Item: {new JsonSerializer().Serialize(image)}");
         }
 
         private bool UpdateProduct(ProductForUpdate product)
@@ -208,12 +217,12 @@ namespace DecoStreetIntegracja.Integrations.Base
 
             var response = client.Execute<bool>(request);
 
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK && response.Data)
             {
                 return response.Data;
             }
-            // log that something went wrong
-            return false;
+
+            throw new Exception($"UpdateProduct, StatusCode: {response.StatusCode}, Content: {response.Content}, Item: {new JsonSerializer().Serialize(product)}");
         }
 
         private void DownloadSourceFile()
@@ -239,7 +248,13 @@ namespace DecoStreetIntegracja.Integrations.Base
             client.Authenticator = new HttpBasicAuthenticator(ConfigurationManager.AppSettings["api_login"], ConfigurationManager.AppSettings["api_pass"]);
             var request = new RestRequest("auth", Method.POST);
             var response = client.Execute<AuthResponse>(request);
-            return response.Data.access_token;
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return response.Data.access_token;
+            }
+
+            throw new Exception($"GetAuthToken, StatusCode: {response.StatusCode}, Content: {response.Content}");
         }
 
         public virtual void Dispose()

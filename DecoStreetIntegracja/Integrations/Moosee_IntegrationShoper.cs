@@ -20,6 +20,23 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override NetworkCredential SourceCredentials => new NetworkCredential("kingbath_plikixml", "Formanowa1");
 
+        internal override void Process()
+        {
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(sourceStream);
+            var xmlNodeList = xmlDocument.SelectNodes("//produkty/produkt");
+
+            var list = xmlNodeList.Cast<XmlNode>()
+                .Where(sourceNode => sourceNode["producent"].InnerText == "Moosee" && sourceNode["produkt_wycofany"].InnerText == "NIE").ToList();
+
+            Logger.Log($"To process: {list.Count}");
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                ProcessProduct(list[i]);
+            }
+        }
+
         internal override IEnumerable<ProductImageForInsert> GenerateImagesForInsert(int product_id, XmlNode sourceNode)
         {
             var productImages = new List<ProductImageForInsert>();
@@ -52,6 +69,11 @@ namespace DecoStreetIntegracja.Integrations
             return productImages;
         }
 
+        internal override int GetDeliveryId()
+        {
+            return 11;
+        }
+
         internal override string GetDescriptionFromNode(XmlNode sourceNode)
         {
             return sourceNode["opis"].InnerText;
@@ -80,21 +102,6 @@ namespace DecoStreetIntegracja.Integrations
         internal override decimal GetWeightFromNode(XmlNode sourceNode)
         {
             return decimal.Parse(sourceNode["waga"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
-        }
-
-        internal override void Process()
-        {
-            var xmlDocument = new XmlDocument();
-            xmlDocument.Load(sourceStream);
-            var xmlNodeList = xmlDocument.SelectNodes("//produkty/produkt");
-
-            foreach (XmlNode sourceNode in xmlNodeList)
-            {
-                if (sourceNode["producent"].InnerText == "Moosee")
-                {
-                    ProcessProduct(sourceNode);
-                }
-            }
         }
     }
 }

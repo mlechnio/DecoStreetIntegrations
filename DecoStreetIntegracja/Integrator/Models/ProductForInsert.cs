@@ -8,7 +8,7 @@ namespace DecoStreetIntegracja.Integrator.Models
 {
     public class ProductForInsert
     {
-        public int category_id { get; set; } = 1361;
+        public int category_id { get; set; } = 1362;
 
         public string code { get; set; }
 

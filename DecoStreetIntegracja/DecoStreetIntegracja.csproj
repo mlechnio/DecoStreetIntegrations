@@ -68,6 +68,7 @@
     <Compile Include="Integrations\Kingshome_IntegrationShoper.cs" />
     <Compile Include="Integrations\Kingshome_Integration.cs" />
     <Compile Include="Integrations\Malodesign_Integration.cs" />
+    <Compile Include="Integrations\Malodesign_IntegrationShoper.cs" />
     <Compile Include="Integrations\Moosee_IntegrationShoper.cs" />
     <Compile Include="Integrations\Moosee_Integration.cs" />
     <Compile Include="Integrations\Victoria_Integration.cs" />

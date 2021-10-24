@@ -23,11 +23,13 @@ namespace DecoStreetIntegracja.Utils
 
         public static void Log(string message)
         {
+            Console.WriteLine(message);
             Events.Add(new Event(message));
         }
 
         internal static void LogException(Exception ex)
         {
+            Console.WriteLine(ex.Message);
             Exceptions.Add(ex);
         }
     }

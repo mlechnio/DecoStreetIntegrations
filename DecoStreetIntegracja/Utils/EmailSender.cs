@@ -21,7 +21,7 @@ namespace DecoStreetIntegracja.Utils
 
             if (Logger.Exceptions.Any())
             {
-                SendEmail(string.Join("<br>", Logger.Exceptions), "Wystąpił wyjątek", "mariusz.lechnio@gmail.com");
+                SendEmail(string.Join("<br><br>", Logger.Exceptions), "Wystąpił wyjątek", "mariusz.lechnio@gmail.com");
             }
         }
 
@@ -46,9 +46,8 @@ namespace DecoStreetIntegracja.Utils
                 client.Send(message);
                 client.Dispose();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 throw;
             }
         }

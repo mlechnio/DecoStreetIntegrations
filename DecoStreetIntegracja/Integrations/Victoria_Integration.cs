@@ -22,7 +22,7 @@ namespace DecoStreetIntegracja.Integrations
             var xmlDocument = new XmlDocument();
             xmlDocument.Load(sourceStream);
             var xmlNodeList = xmlDocument.SelectNodes("//offers/o");
-            var counter = 0;
+
             foreach (XmlNode sourceNode in xmlNodeList)
             {
                 sourceNode.Attributes["id"].InnerText = IdPrefix + sourceNode.Attributes["id"].InnerText;
