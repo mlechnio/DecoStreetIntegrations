@@ -30,7 +30,7 @@ namespace DecoStreetIntegracja.Integrations
 
             var list = xmlNodeList.Cast<XmlNode>().Where(x => EnabledData.enabledD2Categories.Contains(x["kategoria_glowna"].InnerText)).ToList();
 
-            Logger.Log($"Products process: {list.Count}");
+            Logger.Log($"To process: {list.Count}");
 
             for (int i = 0; i < list.Count; i++)
             {

@@ -25,7 +25,7 @@ namespace DecoStreetIntegracja.Integrations
 
             var list = xmlNodeList.Cast<XmlNode>().ToList();
 
-            Logger.Log($"Products process: {list.Count}");
+            Logger.Log($"To process: {list.Count}");
 
             for (int i = 0; i < list.Count; i++)
             {
