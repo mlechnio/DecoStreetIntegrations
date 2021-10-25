@@ -48,7 +48,7 @@ namespace DecoStreetIntegracja.Integrations
                 productImages.Add(new ProductImageForInsert
                 {
                     product_id = product_id,
-                    url = sourceNode["lista_zdjec"].ChildNodes[0].InnerText,
+                    url = sourceNode["lista_zdjec"].ChildNodes[0].InnerText.Replace(" ", "%20"),
                     name = sourceNode["nazwa"].InnerText,
                     translations = new ProductTranslations { pl_PL = new Translation { name = sourceNode["nazwa"].InnerText } }
                 });
@@ -60,7 +60,7 @@ namespace DecoStreetIntegracja.Integrations
                         productImages.Add(new ProductImageForInsert
                         {
                             product_id = product_id,
-                            url = sourceNode["lista_zdjec"].ChildNodes[i].InnerText,
+                            url = sourceNode["lista_zdjec"].ChildNodes[i].InnerText.Replace(" ", "%20"),
                             name = sourceNode["nazwa"].InnerText + " " + i,
                             translations = new ProductTranslations { pl_PL = new Translation { name = sourceNode["nazwa"].InnerText + " " + i } }
                         });

@@ -40,6 +40,12 @@ namespace DecoStreetIntegracja.Integrations.Base
         internal void ProcessProduct(XmlNode sourceNode)
         {
             var productCode = IdPrefix + GetIdFromNode(sourceNode);
+
+            if (productCode != "khdeco4407")
+            {
+                return;
+            }
+
             try
             {
                 Console.WriteLine($"Processing product: {productCode}");

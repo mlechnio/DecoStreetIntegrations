@@ -24,7 +24,7 @@ namespace DecoStreetIntegracja
                             .Build();
 
             scheduler.ScheduleJob(job, trigger);
-            
+
             //new MainIntegrationJob().Execute(null);
         }
     }

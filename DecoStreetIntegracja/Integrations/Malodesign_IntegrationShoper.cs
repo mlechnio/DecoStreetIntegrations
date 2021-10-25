@@ -43,7 +43,7 @@ namespace DecoStreetIntegracja.Integrations
                 productImages.Add(new ProductImageForInsert
                 {
                     product_id = product_id,
-                    url = item.Attributes["url"].InnerText,
+                    url = item.Attributes["url"].InnerText.Replace(" ", "%20"),
                     name = sourceNode["name"].InnerText + (count > 0 ? " " + count : ""),
                     translations = new ProductTranslations { pl_PL = new Translation { name = sourceNode["name"].InnerText + (count > 0 ? " " + count : "") } }
                 });
