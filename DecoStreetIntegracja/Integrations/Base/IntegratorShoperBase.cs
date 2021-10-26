@@ -41,10 +41,10 @@ namespace DecoStreetIntegracja.Integrations.Base
         {
             var productCode = IdPrefix + GetIdFromNode(sourceNode);
 
-            if (productCode != "khdeco4407")
-            {
-                return;
-            }
+            //if (productCode != "khdeco4407")
+            //{
+            //    return;
+            //}
 
             try
             {
