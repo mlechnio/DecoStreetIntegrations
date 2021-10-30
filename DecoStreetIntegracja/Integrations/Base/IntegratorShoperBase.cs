@@ -79,7 +79,7 @@ namespace DecoStreetIntegracja.Integrations.Base
                     Logger.Log($"ADDED {product.code}, PRICE: {product.stock.price}, QUANTITY: {product.stock.stock}");
                     Logger.NewProducts.Add(product.code);
 
-                    foreach (var item in GenerateImagesForInsert(product_id, sourceNode))
+                    foreach (var item in GenerateImagesForInsert2(product_id, sourceNode))
                     {
                         Thread.Sleep(1000);
                         InsertProductImage(item);
@@ -93,7 +93,29 @@ namespace DecoStreetIntegracja.Integrations.Base
             }
         }
 
-        internal abstract IEnumerable<ProductImageForInsert> GenerateImagesForInsert(int product_id, XmlNode sourceNode);
+        internal IEnumerable<ProductImageForInsert> GenerateImagesForInsert2(int product_id, XmlNode sourceNode)
+        {
+            var productImages = new List<ProductImageForInsert>();
+
+            var count = 0;
+            foreach (var url in GetImageUrls(sourceNode))
+            {
+                productImages.Add(new ProductImageForInsert
+                {
+                    product_id = product_id,
+                    url = url,
+                    name = GetNameFromNode(sourceNode) + (count > 0 ? " " + count : ""),
+                    translations = new ProductTranslations { pl_PL = new Translation { name = GetNameFromNode(sourceNode) + (count > 0 ? " " + count : "") } }
+                });
+                count++;
+            }
+
+            return productImages;
+        }
+
+        //internal abstract IEnumerable<ProductImageForInsert> GenerateImagesForInsert(int product_id, XmlNode sourceNode);
+
+        internal abstract IEnumerable<string> GetImageUrls(XmlNode sourceNode);
 
         private ProductForInsert GenerateProductForInsert(XmlNode sourceNode)
         {
@@ -140,9 +162,13 @@ namespace DecoStreetIntegracja.Integrations.Base
             var priceNew = GetPriceFromNode(sourceNode);
             var stockNew = GetStockFromNode(sourceNode);
 
-            if (existingProduct.stock.price != priceNew || existingProduct.stock.stock != stockNew)
+            var priceChanged = existingProduct.stock.price != priceNew;
+            var stockChanged = existingProduct.stock.stock != stockNew;
+            var stylePriceChanged = priceChanged ? "style=\"color:red\"" : "";
+            var styleStockChanged = stockChanged ? "style=\"color:red\"" : "";
+            if (priceChanged || stockChanged)
             {
-                Logger.Log($"UPDATING <strong>{existingProduct.code}</strong>, PRICE: {existingProduct.stock.price} -> <strong>{priceNew}</strong>, STOCK: {existingProduct.stock.stock} -> <strong>{stockNew}</strong>");
+                Logger.Log($"UPDATING <strong>{existingProduct.code}</strong>, PRICE: {existingProduct.stock.price} -> <strong {stylePriceChanged} >{priceNew}</strong>, STOCK: {existingProduct.stock.stock} -> <strong {styleStockChanged}>{stockNew}</strong>");
                 return new ProductForUpdate
                 {
                     product_id = existingProduct.product_id,

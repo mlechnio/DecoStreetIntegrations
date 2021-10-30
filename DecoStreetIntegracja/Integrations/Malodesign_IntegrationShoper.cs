@@ -33,25 +33,25 @@ namespace DecoStreetIntegracja.Integrations
             }
         }
 
-        internal override IEnumerable<ProductImageForInsert> GenerateImagesForInsert(int product_id, XmlNode sourceNode)
-        {
-            var productImages = new List<ProductImageForInsert>();
+        //internal override IEnumerable<ProductImageForInsert> GenerateImagesForInsert(int product_id, XmlNode sourceNode)
+        //{
+        //    var productImages = new List<ProductImageForInsert>();
 
-            var count = 0;
-            foreach (XmlNode item in sourceNode["imgs"].ChildNodes)
-            {
-                productImages.Add(new ProductImageForInsert
-                {
-                    product_id = product_id,
-                    url = item.Attributes["url"].InnerText.Replace(" ", "%20"),
-                    name = sourceNode["name"].InnerText + (count > 0 ? " " + count : ""),
-                    translations = new ProductTranslations { pl_PL = new Translation { name = sourceNode["name"].InnerText + (count > 0 ? " " + count : "") } }
-                });
-                count++;
-            }
+        //    var count = 0;
+        //    foreach (XmlNode item in sourceNode["imgs"].ChildNodes)
+        //    {
+        //        productImages.Add(new ProductImageForInsert
+        //        {
+        //            product_id = product_id,
+        //            url = item.Attributes["url"].InnerText.Replace(" ", "%20"),
+        //            name = sourceNode["name"].InnerText + (count > 0 ? " " + count : ""),
+        //            translations = new ProductTranslations { pl_PL = new Translation { name = sourceNode["name"].InnerText + (count > 0 ? " " + count : "") } }
+        //        });
+        //        count++;
+        //    }
 
-            return productImages;
-        }
+        //    return productImages;
+        //}
 
         internal override int GetDeliveryId()
         {
@@ -87,6 +87,14 @@ namespace DecoStreetIntegracja.Integrations
         internal override decimal GetWeightFromNode(XmlNode sourceNode)
         {
             return decimal.Parse(sourceNode.Attributes["weight"].InnerText, CultureInfo.InvariantCulture);
+        }
+
+        internal override IEnumerable<string> GetImageUrls(XmlNode sourceNode)
+        {
+            foreach (XmlNode item in sourceNode["imgs"].ChildNodes)
+            {
+                yield return item.Attributes["url"].InnerText.Replace(" ", "%20");
+            }
         }
     }
 }

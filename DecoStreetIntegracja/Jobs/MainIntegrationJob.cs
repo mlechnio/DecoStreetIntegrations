@@ -19,8 +19,21 @@ namespace DecoStreetIntegracja.Jobs
 
         public void RunIntegrations()
         {
+            //RunSingle();
             RunShoper();
-            //RunProd();
+        }
+        private void RunSingle()
+        {
+            try
+            {
+                Logger.Log("Aldex Started");
+                new Aldex_IntegrationShoper();
+                Logger.Log("Aldex Ended");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+            }
         }
 
         private void RunShoper()
