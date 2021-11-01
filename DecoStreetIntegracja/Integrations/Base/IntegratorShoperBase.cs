@@ -37,11 +37,31 @@ namespace DecoStreetIntegracja.Integrations.Base
             Dispose();
         }
 
-        internal void ProcessProduct(XmlNode sourceNode)
+        internal void ProcessProduct(XmlNode sourceNode, bool insertNew = true)
         {
             var productCode = IdPrefix + GetIdFromNode(sourceNode);
+            //var productsToProcess = new List<string>();
+            //productsToProcess.Add("khdeco34295");
+            //productsToProcess.Add("khdeco34319");
+            //productsToProcess.Add("khdeco34334");
+            //productsToProcess.Add("khdeco34339");
+            //productsToProcess.Add("khdeco34355");
+            //productsToProcess.Add("khdeco34370");
+            //productsToProcess.Add("khdeco34385");
+            //productsToProcess.Add("khdeco34390");
+            //productsToProcess.Add("khdeco34395");
+            //productsToProcess.Add("khdeco34400");
+            //productsToProcess.Add("khdeco34405");
+            //productsToProcess.Add("khdeco34415");
+            //productsToProcess.Add("khdeco34420");
+            //productsToProcess.Add("khdeco34440");
+            //productsToProcess.Add("khdeco34465");
+            //productsToProcess.Add("khdeco34470");
+            //productsToProcess.Add("khdeco34480");
+            //productsToProcess.Add("khdeco34485");
+            //productsToProcess.Add("khdeco34521");
 
-            //if (productCode != "khdeco4407")
+            //if (!productsToProcess.Contains(productCode))
             //{
             //    return;
             //}
@@ -68,21 +88,25 @@ namespace DecoStreetIntegracja.Integrations.Base
                 }
                 else
                 {
-                    var product = GenerateProductForInsert(sourceNode);
-                    var product_id = InsertProduct(product);
-
-                    if (product_id == 0)
+                    if (insertNew)
                     {
-                        return;
-                    }
 
-                    Logger.Log($"ADDED {product.code}, PRICE: {product.stock.price}, QUANTITY: {product.stock.stock}");
-                    Logger.NewProducts.Add(product.code);
+                        var product = GenerateProductForInsert(sourceNode);
+                        var product_id = InsertProduct(product);
 
-                    foreach (var item in GenerateImagesForInsert2(product_id, sourceNode))
-                    {
-                        Thread.Sleep(1000);
-                        InsertProductImage(item);
+                        if (product_id == 0)
+                        {
+                            return;
+                        }
+
+                        Logger.Log($"ADDED {product.code}, PRICE: {product.stock.price}, QUANTITY: {product.stock.stock}");
+                        Logger.NewProducts.Add(product.code);
+
+                        foreach (var item in GenerateImagesForInsert2(product_id, sourceNode))
+                        {
+                            Thread.Sleep(1000);
+                            InsertProductImage(item);
+                        }
                     }
                 }
             }

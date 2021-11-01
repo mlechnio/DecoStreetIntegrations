@@ -24,16 +24,16 @@ namespace DecoStreetIntegracja.Jobs
         }
         private void RunSingle()
         {
-            try
-            {
-                Logger.Log("Aldex Started");
-                new Aldex_IntegrationShoper();
-                Logger.Log("Aldex Ended");
-            }
-            catch (Exception ex)
-            {
-                Logger.LogException(ex);
-            }
+            //try
+            //{
+            //    Logger.Log("Aldex Started");
+            //    new Aldex_IntegrationShoper();
+            //    Logger.Log("Aldex Ended");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.LogException(ex);
+            //}
         }
 
         private void RunShoper()
@@ -60,16 +60,16 @@ namespace DecoStreetIntegracja.Jobs
                 Logger.LogException(ex);
             }
 
-            //try
-            //{
-            //    Logger.Log("Kingshome Started");
-            //    new Kingshome_IntegrationShoper();
-            //    Logger.Log("Kingshome Ended");
-            //}
-            //catch (Exception ex)
-            //{
-            //    Logger.LogException(ex);
-            //}
+            try
+            {
+                Logger.Log("Kingshome Started");
+                new Kingshome_IntegrationShoper();
+                Logger.Log("Kingshome Ended");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+            }
 
             try
             {
