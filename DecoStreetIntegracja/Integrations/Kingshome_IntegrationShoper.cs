@@ -1,12 +1,14 @@
 ﻿using DecoStreetIntegracja.Integrations.Base;
 using DecoStreetIntegracja.Integrator.Models;
 using DecoStreetIntegracja.Utils;
+using RestSharp.Serializers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -26,7 +28,7 @@ namespace DecoStreetIntegracja.Integrations
             xmlDocument.Load(sourceStream);
             var xmlNodeList = xmlDocument.SelectNodes("//produkty/produkt");
 
-            var categories = new List<string> { "fotele", "hokery", "krzesła", "oświetlenie", "stoły", "szafki", "stołki", "stoliki", "podnóżki", "biurka" };
+            var categories = new List<string> { "fotele", "hokery", "krzesła", "oświetlenie", "stoły", "szafki", "stołki", "stoliki", "podnóżki", "biurka", "krzesła barowe" };
 
             var list = xmlNodeList.Cast<XmlNode>()
                 .Where(sourceNode => sourceNode["producent"].InnerText != "Moosee" && categories.Contains(sourceNode["kategoria_glowna"].InnerText.ToLower()) && sourceNode["produkt_wycofany"].InnerText == "NIE").ToList();
@@ -37,39 +39,33 @@ namespace DecoStreetIntegracja.Integrations
             {
                 ProcessProduct(list[i], false);
             }
+
+            var toDelete = xmlNodeList.Cast<XmlNode>().Where(sourceNode => sourceNode["produkt_wycofany"].InnerText == "TAK").ToList();
+
+            for (int i = 0; i < toDelete.Count; i++)
+            {
+                var productCode = IdPrefix + GetIdFromNode(toDelete[i]);
+
+                Console.WriteLine($"Trying to delete product: {productCode}");
+
+                Thread.Sleep(1000);
+
+                var existingProduct = GetExistingProduct(productCode);
+
+                if (existingProduct != null)
+                {
+                    try
+                    {
+                        DeleteProduct(existingProduct.product_id);
+                        Logger.Log($"DeletedProduct: {new JsonSerializer().Serialize(existingProduct)}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogException(ex);
+                    }
+                }
+            }
         }
-
-        //internal override IEnumerable<ProductImageForInsert> GenerateImagesForInsert(int product_id, XmlNode sourceNode)
-        //{
-        //    var productImages = new List<ProductImageForInsert>();
-
-        //    if (sourceNode["lista_zdjec"].ChildNodes.Count > 0)
-        //    {
-        //        productImages.Add(new ProductImageForInsert
-        //        {
-        //            product_id = product_id,
-        //            url = sourceNode["lista_zdjec"].ChildNodes[0].InnerText.Replace(" ", "%20"),
-        //            name = sourceNode["nazwa"].InnerText,
-        //            translations = new ProductTranslations { pl_PL = new Translation { name = sourceNode["nazwa"].InnerText } }
-        //        });
-
-        //        if (sourceNode["lista_zdjec"].ChildNodes.Count > 1)
-        //        {
-        //            for (var i = 1; i < sourceNode["lista_zdjec"].ChildNodes.Count; ++i)
-        //            {
-        //                productImages.Add(new ProductImageForInsert
-        //                {
-        //                    product_id = product_id,
-        //                    url = sourceNode["lista_zdjec"].ChildNodes[i].InnerText.Replace(" ", "%20"),
-        //                    name = sourceNode["nazwa"].InnerText + " " + i,
-        //                    translations = new ProductTranslations { pl_PL = new Translation { name = sourceNode["nazwa"].InnerText + " " + i } }
-        //                });
-        //            }
-        //        }
-        //    }
-
-        //    return productImages;
-        //}
 
         internal override int GetDeliveryId()
         {
@@ -83,7 +79,7 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override string GetIdFromNode(XmlNode sourceNode)
         {
-            return sourceNode["numer"].InnerText;
+            return sourceNode["numer"].InnerText + "TEST";
         }
 
         internal override string GetNameFromNode(XmlNode sourceNode)

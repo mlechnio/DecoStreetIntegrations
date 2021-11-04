@@ -157,7 +157,7 @@ namespace DecoStreetIntegracja.Integrations.Base
 
             product.translations.pl_PL = new Translation
             {
-                active = true,
+                active = false,
                 name = GetNameFromNode(sourceNode),
                 description = GetDescriptionFromNode(sourceNode),
             };
@@ -208,7 +208,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             return default;
         }
 
-        private Product GetExistingProduct(string productCode)
+        internal Product GetExistingProduct(string productCode)
         {
             var client = new RestClient(Api);
             client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", AuthToken));
@@ -279,6 +279,22 @@ namespace DecoStreetIntegracja.Integrations.Base
             }
 
             throw new Exception($"UpdateProduct, StatusCode: {response.StatusCode}, Content: {response.Content}, Item: {new JsonSerializer().Serialize(product)}");
+        }
+
+        internal bool DeleteProduct(int productId)
+        {
+            var client = new RestClient(Api);
+            client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", AuthToken));
+            var request = new RestRequest($"products/{productId}", Method.DELETE);
+
+            var response = client.Execute<bool>(request);
+
+            if (response.StatusCode == HttpStatusCode.OK && response.Data)
+            {
+                return response.Data;
+            }
+
+            throw new Exception($"DeleteProduct, StatusCode: {response.StatusCode}, Content: {response.Content}, product_id: {productId}");
         }
 
         private void DownloadSourceFile()
