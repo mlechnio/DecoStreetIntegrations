@@ -79,7 +79,7 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override string GetIdFromNode(XmlNode sourceNode)
         {
-            return sourceNode["numer"].InnerText + "TEST";
+            return sourceNode["numer"].InnerText;
         }
 
         internal override string GetNameFromNode(XmlNode sourceNode)

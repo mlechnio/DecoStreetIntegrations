@@ -137,8 +137,6 @@ namespace DecoStreetIntegracja.Integrations.Base
             return productImages;
         }
 
-        //internal abstract IEnumerable<ProductImageForInsert> GenerateImagesForInsert(int product_id, XmlNode sourceNode);
-
         internal abstract IEnumerable<string> GetImageUrls(XmlNode sourceNode);
 
         private ProductForInsert GenerateProductForInsert(XmlNode sourceNode)
@@ -152,7 +150,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             product.pkwiu = string.Empty;
             product.stock.stock = stock;
             product.stock.price = price;
-            product.stock.weight = weight;
+            product.stock.weight = 0;
             product.stock.delivery_id = GetDeliveryId();
 
             product.translations.pl_PL = new Translation
