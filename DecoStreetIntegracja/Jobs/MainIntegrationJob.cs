@@ -35,11 +35,22 @@ namespace DecoStreetIntegracja.Jobs
             //    Logger.LogException(ex);
             //}
 
+            //try
+            //{
+            //    Logger.Log("Kingshome Started");
+            //    new Kingshome_IntegrationShoper();
+            //    Logger.Log("Kingshome Ended");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.LogException(ex);
+            //}
+
             try
             {
-                Logger.Log("Kingshome Started");
-                new Kingshome_IntegrationShoper();
-                Logger.Log("Kingshome Ended");
+                Logger.Log("D2_Kwadrat Started");
+                new D2_Kwadrat_IntegratorShoper();
+                Logger.Log("D2_Kwadrat Ended");
             }
             catch (Exception ex)
             {

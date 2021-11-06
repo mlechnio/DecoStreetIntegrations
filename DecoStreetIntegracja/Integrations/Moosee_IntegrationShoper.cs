@@ -37,38 +37,6 @@ namespace DecoStreetIntegracja.Integrations
             }
         }
 
-        //internal override IEnumerable<ProductImageForInsert> GenerateImagesForInsert(int product_id, XmlNode sourceNode)
-        //{
-        //    var productImages = new List<ProductImageForInsert>();
-
-        //    if (sourceNode["lista_zdjec"].ChildNodes.Count > 0)
-        //    {
-        //        productImages.Add(new ProductImageForInsert
-        //        {
-        //            product_id = product_id,
-        //            url = sourceNode["lista_zdjec"].ChildNodes[0].InnerText.Replace(" ", "%20"),
-        //            name = sourceNode["nazwa"].InnerText,
-        //            translations = new ProductTranslations { pl_PL = new Translation { name = sourceNode["nazwa"].InnerText } }
-        //        });
-
-        //        if (sourceNode["lista_zdjec"].ChildNodes.Count > 1)
-        //        {
-        //            for (var i = 1; i < sourceNode["lista_zdjec"].ChildNodes.Count; ++i)
-        //            {
-        //                productImages.Add(new ProductImageForInsert
-        //                {
-        //                    product_id = product_id,
-        //                    url = sourceNode["lista_zdjec"].ChildNodes[i].InnerText.Replace(" ", "%20"),
-        //                    name = sourceNode["nazwa"].InnerText + " " + i,
-        //                    translations = new ProductTranslations { pl_PL = new Translation { name = sourceNode["nazwa"].InnerText + " " + i } }
-        //                });
-        //            }
-        //        }
-        //    }
-
-        //    return productImages;
-        //}
-
         internal override int GetDeliveryId()
         {
             return 11;
@@ -118,6 +86,26 @@ namespace DecoStreetIntegracja.Integrations
                     }
                 }
             }
+        }
+
+        internal override decimal GetPriceBeforeDiscount(XmlNode sourceNode)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override bool GetIsInPromo(XmlNode sourceNode)
+        {
+            return false;
+        }
+
+        internal override string GetPromoStartDateFromNode(XmlNode sourceNode)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override string GetPromoEndDateFromNode(XmlNode sourceNode)
+        {
+            throw new NotImplementedException();
         }
     }
 }

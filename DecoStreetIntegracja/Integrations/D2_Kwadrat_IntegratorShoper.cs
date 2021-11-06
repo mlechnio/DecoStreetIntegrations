@@ -38,38 +38,6 @@ namespace DecoStreetIntegracja.Integrations
             }
         }
 
-        //internal override IEnumerable<ProductImageForInsert> GenerateImagesForInsert(int product_id, XmlNode sourceNode)
-        //{
-        //    var productImages = new List<ProductImageForInsert>();
-
-        //    if (sourceNode["lista_zdjec"].ChildNodes.Count > 0)
-        //    {
-        //        productImages.Add(new ProductImageForInsert
-        //        {
-        //            product_id = product_id,
-        //            url = sourceNode["lista_zdjec"].ChildNodes[0].InnerText.Replace(" ", "%20"),
-        //            name = sourceNode["nazwa"].InnerText,
-        //            translations = new ProductTranslations { pl_PL = new Translation { name = sourceNode["nazwa"].InnerText } }
-        //        });
-
-        //        if (sourceNode["lista_zdjec"].ChildNodes.Count > 1)
-        //        {
-        //            for (var i = 1; i < sourceNode["lista_zdjec"].ChildNodes.Count; ++i)
-        //            {
-        //                productImages.Add(new ProductImageForInsert
-        //                {
-        //                    product_id = product_id,
-        //                    url = sourceNode["lista_zdjec"].ChildNodes[i].InnerText.Replace(" ", "%20"),
-        //                    name = sourceNode["nazwa"].InnerText + " " + i,
-        //                    translations = new ProductTranslations { pl_PL = new Translation { name = sourceNode["nazwa"].InnerText + " " + i } }
-        //                });
-        //            }
-        //        }
-        //    }
-
-        //    return productImages;
-        //}
-
         internal override decimal GetPriceFromNode(XmlNode sourceNode)
         {
             return decimal.Parse(sourceNode["cena_brutto"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
@@ -119,6 +87,26 @@ namespace DecoStreetIntegracja.Integrations
                     }
                 }
             }
+        }
+
+        internal override decimal GetPriceBeforeDiscount(XmlNode sourceNode)
+        {
+            return decimal.Parse(sourceNode["cena_brutto_przed_promocja"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
+        }
+
+        internal override bool GetIsInPromo(XmlNode sourceNode)
+        {
+            return sourceNode["czy_w_promocji"].InnerText == "TAK";
+        }
+
+        internal override string GetPromoStartDateFromNode(XmlNode sourceNode)
+        {
+            return sourceNode["promocja_od_dnia"].InnerText;
+        }
+
+        internal override string GetPromoEndDateFromNode(XmlNode sourceNode)
+        {
+            return sourceNode["promocja_do_dnia"].InnerText;
         }
     }
 }

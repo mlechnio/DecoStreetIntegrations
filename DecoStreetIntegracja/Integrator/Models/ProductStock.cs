@@ -6,5 +6,6 @@
         public decimal stock { get; set; }
         public decimal weight { get; set; }
         public int delivery_id { get; set; }
+        public decimal comp_promo_price { get; set; }
     }
 }

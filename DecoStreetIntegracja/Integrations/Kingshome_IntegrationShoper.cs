@@ -117,5 +117,25 @@ namespace DecoStreetIntegracja.Integrations
                 }
             }
         }
+
+        internal override decimal GetPriceBeforeDiscount(XmlNode sourceNode)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override bool GetIsInPromo(XmlNode sourceNode)
+        {
+            return false;
+        }
+
+        internal override string GetPromoStartDateFromNode(XmlNode sourceNode)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override string GetPromoEndDateFromNode(XmlNode sourceNode)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

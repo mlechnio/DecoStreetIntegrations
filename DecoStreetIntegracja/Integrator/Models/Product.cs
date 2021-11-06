@@ -13,5 +13,7 @@ namespace DecoStreetIntegracja.Integrator.Models
         public string code { get; set; }
 
         public ProductStock stock { get; set; }
+
+        public SpecialOffer special_offer { get; set; }
     }
 }

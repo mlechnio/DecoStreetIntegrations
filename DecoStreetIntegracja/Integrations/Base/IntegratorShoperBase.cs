@@ -7,6 +7,7 @@ using RestSharp.Serializers;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -40,8 +41,8 @@ namespace DecoStreetIntegracja.Integrations.Base
         internal void ProcessProduct(XmlNode sourceNode, bool insertNew = true)
         {
             var productCode = IdPrefix + GetIdFromNode(sourceNode);
-            //var productsToProcess = new List<string>();
-            //productsToProcess.Add("khdeco34295");
+            var productsToProcess = new List<string>();
+            productsToProcess.Add("DK105761");
             //productsToProcess.Add("khdeco34319");
             //productsToProcess.Add("khdeco34334");
             //productsToProcess.Add("khdeco34339");
@@ -61,10 +62,10 @@ namespace DecoStreetIntegracja.Integrations.Base
             //productsToProcess.Add("khdeco34485");
             //productsToProcess.Add("khdeco34521");
 
-            //if (!productsToProcess.Contains(productCode))
-            //{
-            //    return;
-            //}
+            if (!productsToProcess.Contains(productCode))
+            {
+               // return;
+            }
 
             try
             {
@@ -80,6 +81,10 @@ namespace DecoStreetIntegracja.Integrations.Base
                     if (productForUpdate != null)
                     {
                         UpdateProduct(productForUpdate);
+                        if (productForUpdate.RemovePromotion)
+                        {
+                            DeletePromotion(existingProduct.special_offer.promo_id);
+                        }
                     }
                     else
                     {
@@ -115,6 +120,22 @@ namespace DecoStreetIntegracja.Integrations.Base
                 Logger.Log($"ERROR {productCode}, <strong>EXCEPTION</strong>: {ex.Message}");
                 Logger.LogException(ex);
             }
+        }
+
+        private bool DeletePromotion(int promo_id)
+        {
+            var client = new RestClient(Api);
+            client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", AuthToken));
+            var request = new RestRequest($"specialoffers/{promo_id}", Method.DELETE);
+
+            var response = client.Execute<bool>(request);
+
+            if (response.StatusCode == HttpStatusCode.OK && response.Data)
+            {
+                return response.Data;
+            }
+
+            throw new Exception($"DeletePromotion, StatusCode: {response.StatusCode}, Content: {response.Content}, Promo id: {promo_id}");
         }
 
         internal IEnumerable<ProductImageForInsert> GenerateImagesForInsert2(int product_id, XmlNode sourceNode)
@@ -167,6 +188,10 @@ namespace DecoStreetIntegracja.Integrations.Base
 
         internal abstract decimal GetPriceFromNode(XmlNode sourceNode);
 
+        internal abstract decimal GetPriceBeforeDiscount(XmlNode sourceNode);
+
+        internal abstract bool GetIsInPromo(XmlNode sourceNode);
+
         internal abstract decimal GetStockFromNode(XmlNode sourceNode);
 
         internal abstract decimal GetWeightFromNode(XmlNode sourceNode);
@@ -177,20 +202,39 @@ namespace DecoStreetIntegracja.Integrations.Base
 
         internal abstract string GetDescriptionFromNode(XmlNode sourceNode);
 
+        internal abstract string GetPromoStartDateFromNode(XmlNode sourceNode);
+
+        internal abstract string GetPromoEndDateFromNode(XmlNode sourceNode);
+
         internal abstract int GetDeliveryId();
 
         private ProductForUpdate GenerateProductForUpdate(Product existingProduct, XmlNode sourceNode)
         {
-            var priceNew = GetPriceFromNode(sourceNode);
+            var inPromo = GetIsInPromo(sourceNode);
+            var priceNew = inPromo ? GetPriceBeforeDiscount(sourceNode) : GetPriceFromNode(sourceNode);
             var stockNew = GetStockFromNode(sourceNode);
 
             var priceChanged = existingProduct.stock.price != priceNew;
             var stockChanged = existingProduct.stock.stock != stockNew;
+            var promoPriceChanged = existingProduct.stock.comp_promo_price != GetPriceFromNode(sourceNode);
             var stylePriceChanged = priceChanged ? "style=\"color:red\"" : "";
             var styleStockChanged = stockChanged ? "style=\"color:red\"" : "";
-            if (priceChanged || stockChanged)
+            if (promoPriceChanged || priceChanged || stockChanged || existingProduct.stock.weight > 0)
             {
                 Logger.Log($"UPDATING <strong>{existingProduct.code}</strong>, PRICE: {existingProduct.stock.price} -> <strong {stylePriceChanged} >{priceNew}</strong>, STOCK: {existingProduct.stock.stock} -> <strong {styleStockChanged}>{stockNew}</strong>");
+                if (existingProduct.stock.weight > 0)
+                {
+                    Logger.Log($"UPDATING weight to 0");
+                }
+                if (inPromo && (promoPriceChanged || existingProduct.special_offer == null))
+                {
+                    Logger.Log($"UPDATING adding special_offer");
+                }
+                if (!inPromo && existingProduct.special_offer != null)
+                {
+                    Logger.Log($"UPDATING removing special_offer");
+                }
+
                 return new ProductForUpdate
                 {
                     product_id = existingProduct.product_id,
@@ -199,7 +243,15 @@ namespace DecoStreetIntegracja.Integrations.Base
                         price = priceNew,
                         stock = stockNew,
                         delivery_id = GetDeliveryId(),
-                    }
+                        weight = 0,
+                    },
+                    special_offer = inPromo && (promoPriceChanged || existingProduct.special_offer == null) ? new SpecialOffer
+                    {
+                        discount = GetPriceBeforeDiscount(sourceNode) - GetPriceFromNode(sourceNode),
+                        date_from = GetPromoStartDateFromNode(sourceNode),
+                        date_to = GetPromoEndDateFromNode(sourceNode),
+                    } : null,
+                    RemovePromotion = !inPromo && existingProduct.special_offer != null
                 };
             }
 

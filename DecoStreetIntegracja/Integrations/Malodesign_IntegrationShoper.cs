@@ -33,26 +33,6 @@ namespace DecoStreetIntegracja.Integrations
             }
         }
 
-        //internal override IEnumerable<ProductImageForInsert> GenerateImagesForInsert(int product_id, XmlNode sourceNode)
-        //{
-        //    var productImages = new List<ProductImageForInsert>();
-
-        //    var count = 0;
-        //    foreach (XmlNode item in sourceNode["imgs"].ChildNodes)
-        //    {
-        //        productImages.Add(new ProductImageForInsert
-        //        {
-        //            product_id = product_id,
-        //            url = item.Attributes["url"].InnerText.Replace(" ", "%20"),
-        //            name = sourceNode["name"].InnerText + (count > 0 ? " " + count : ""),
-        //            translations = new ProductTranslations { pl_PL = new Translation { name = sourceNode["name"].InnerText + (count > 0 ? " " + count : "") } }
-        //        });
-        //        count++;
-        //    }
-
-        //    return productImages;
-        //}
-
         internal override int GetDeliveryId()
         {
             return 11;
@@ -95,6 +75,26 @@ namespace DecoStreetIntegracja.Integrations
             {
                 yield return item.Attributes["url"].InnerText.Replace(" ", "%20");
             }
+        }
+
+        internal override decimal GetPriceBeforeDiscount(XmlNode sourceNode)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override bool GetIsInPromo(XmlNode sourceNode)
+        {
+            return false;
+        }
+
+        internal override string GetPromoStartDateFromNode(XmlNode sourceNode)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override string GetPromoEndDateFromNode(XmlNode sourceNode)
+        {
+            throw new NotImplementedException();
         }
     }
 }
