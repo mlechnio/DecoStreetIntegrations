@@ -220,13 +220,13 @@ namespace DecoStreetIntegracja.Integrations.Base
             var stylePriceChanged = priceChanged ? "style=\"color:red\"" : "";
             var styleStockChanged = stockChanged ? "style=\"color:red\"" : "";
 
-            if (updateDescription || promoPriceChanged || priceChanged || stockChanged || existingProduct.stock.weight != 30)
+            if (updateDescription || promoPriceChanged || priceChanged || stockChanged)
             {
                 Logger.Log($"UPDATING <strong>{existingProduct.code}</strong>, PRICE: {existingProduct.stock.price} -> <strong {stylePriceChanged} >{priceNew}</strong>, STOCK: {existingProduct.stock.stock} -> <strong {styleStockChanged}>{stockNew}</strong>");
-                if (existingProduct.stock.weight != 30)
-                {
-                    Logger.Log($"UPDATING weight to 30");
-                }
+                //if (existingProduct.stock.weight != 30)
+                //{
+                //    Logger.Log($"UPDATING weight to 30");
+                //}
                 if (inPromo && (promoPriceChanged || existingProduct.special_offer == null))
                 {
                     Logger.Log($"UPDATING adding special_offer");
@@ -244,7 +244,7 @@ namespace DecoStreetIntegracja.Integrations.Base
                         price = priceNew,
                         stock = stockNew,
                         delivery_id = GetDeliveryId(),
-                        weight = 30,
+                        //weight = 30,
                     },
                     special_offer = inPromo && (promoPriceChanged || existingProduct.special_offer == null) ? new SpecialOffer
                     {
