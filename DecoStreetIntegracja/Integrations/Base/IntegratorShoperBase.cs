@@ -38,18 +38,18 @@ namespace DecoStreetIntegracja.Integrations.Base
             Dispose();
         }
 
-        internal void ProcessProduct(XmlNode sourceNode, bool insertNew = true)
+        internal void ProcessProduct(XmlNode sourceNode, bool insertNew = true, bool updateDescriptions = false)
         {
             var productCode = IdPrefix + GetIdFromNode(sourceNode);
             var productsToProcess = new List<string>();
-            productsToProcess.Add("DK105761");
-            //productsToProcess.Add("khdeco34319");
-            //productsToProcess.Add("khdeco34334");
-            //productsToProcess.Add("khdeco34339");
-            //productsToProcess.Add("khdeco34355");
-            //productsToProcess.Add("khdeco34370");
-            //productsToProcess.Add("khdeco34385");
-            //productsToProcess.Add("khdeco34390");
+            //productsToProcess.Add("DK112617");
+            //productsToProcess.Add("DK243978");
+            //productsToProcess.Add("DK162354");
+            //productsToProcess.Add("DK205956");
+            //productsToProcess.Add("DK206010");
+            //productsToProcess.Add("DK241858");
+            //productsToProcess.Add("DK205135");
+            //productsToProcess.Add("DK255183");
             //productsToProcess.Add("khdeco34395");
             //productsToProcess.Add("khdeco34400");
             //productsToProcess.Add("khdeco34405");
@@ -64,7 +64,7 @@ namespace DecoStreetIntegracja.Integrations.Base
 
             if (!productsToProcess.Contains(productCode))
             {
-               // return;
+                //return;
             }
 
             try
@@ -77,7 +77,7 @@ namespace DecoStreetIntegracja.Integrations.Base
 
                 if (existingProduct != null)
                 {
-                    var productForUpdate = GenerateProductForUpdate(existingProduct, sourceNode);
+                    var productForUpdate = GenerateProductForUpdate(existingProduct, sourceNode, updateDescriptions);
                     if (productForUpdate != null)
                     {
                         UpdateProduct(productForUpdate);
@@ -171,12 +171,12 @@ namespace DecoStreetIntegracja.Integrations.Base
             product.pkwiu = string.Empty;
             product.stock.stock = stock;
             product.stock.price = price;
-            product.stock.weight = 0;
+            product.stock.weight = 30;
             product.stock.delivery_id = GetDeliveryId();
 
             product.translations.pl_PL = new Translation
             {
-                active = false,
+                active = "0",
                 name = GetNameFromNode(sourceNode),
                 description = GetDescriptionFromNode(sourceNode),
             };
@@ -208,7 +208,7 @@ namespace DecoStreetIntegracja.Integrations.Base
 
         internal abstract int GetDeliveryId();
 
-        private ProductForUpdate GenerateProductForUpdate(Product existingProduct, XmlNode sourceNode)
+        private ProductForUpdate GenerateProductForUpdate(Product existingProduct, XmlNode sourceNode, bool updateDescription)
         {
             var inPromo = GetIsInPromo(sourceNode);
             var priceNew = inPromo ? GetPriceBeforeDiscount(sourceNode) : GetPriceFromNode(sourceNode);
@@ -219,12 +219,13 @@ namespace DecoStreetIntegracja.Integrations.Base
             var promoPriceChanged = existingProduct.stock.comp_promo_price != GetPriceFromNode(sourceNode);
             var stylePriceChanged = priceChanged ? "style=\"color:red\"" : "";
             var styleStockChanged = stockChanged ? "style=\"color:red\"" : "";
-            if (promoPriceChanged || priceChanged || stockChanged || existingProduct.stock.weight > 0)
+
+            if (updateDescription || promoPriceChanged || priceChanged || stockChanged || existingProduct.stock.weight != 30)
             {
                 Logger.Log($"UPDATING <strong>{existingProduct.code}</strong>, PRICE: {existingProduct.stock.price} -> <strong {stylePriceChanged} >{priceNew}</strong>, STOCK: {existingProduct.stock.stock} -> <strong {styleStockChanged}>{stockNew}</strong>");
-                if (existingProduct.stock.weight > 0)
+                if (existingProduct.stock.weight != 30)
                 {
-                    Logger.Log($"UPDATING weight to 0");
+                    Logger.Log($"UPDATING weight to 30");
                 }
                 if (inPromo && (promoPriceChanged || existingProduct.special_offer == null))
                 {
@@ -235,7 +236,7 @@ namespace DecoStreetIntegracja.Integrations.Base
                     Logger.Log($"UPDATING removing special_offer");
                 }
 
-                return new ProductForUpdate
+                var productToUpdate = new ProductForUpdate
                 {
                     product_id = existingProduct.product_id,
                     stock = new ProductStock
@@ -243,7 +244,7 @@ namespace DecoStreetIntegracja.Integrations.Base
                         price = priceNew,
                         stock = stockNew,
                         delivery_id = GetDeliveryId(),
-                        weight = 0,
+                        weight = 30,
                     },
                     special_offer = inPromo && (promoPriceChanged || existingProduct.special_offer == null) ? new SpecialOffer
                     {
@@ -251,8 +252,23 @@ namespace DecoStreetIntegracja.Integrations.Base
                         date_from = GetPromoStartDateFromNode(sourceNode),
                         date_to = GetPromoEndDateFromNode(sourceNode),
                     } : null,
-                    RemovePromotion = !inPromo && existingProduct.special_offer != null
+                    RemovePromotion = !inPromo && existingProduct.special_offer != null,
                 };
+
+                if (updateDescription)
+                {
+                    productToUpdate.translations = new ProductTranslations();
+                    productToUpdate.translations.pl_PL = new Translation
+                    {
+                        active = existingProduct.translations.pl_PL.active,
+                        name = existingProduct.translations.pl_PL.name,
+                        seo_url = existingProduct.translations.pl_PL.seo_url,
+                        short_description = existingProduct.translations.pl_PL.short_description,
+                        description = GetDescriptionFromNode(sourceNode),
+                    };
+                }
+
+                return productToUpdate;
             }
 
             return default;

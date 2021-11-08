@@ -14,6 +14,8 @@ namespace DecoStreetIntegracja.Integrator.Models
 
         public SpecialOffer special_offer { get; set; }
 
+        public ProductTranslations translations { get; set; }
+
         public bool RemovePromotion { get; set; }
     }
 }

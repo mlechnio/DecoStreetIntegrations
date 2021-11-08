@@ -37,6 +37,17 @@ namespace DecoStreetIntegracja.Jobs
 
             //try
             //{
+            //    Logger.Log("Moosee Started");
+            //    new Moosee_IntegrationShoper();
+            //    Logger.Log("Moosee Ended");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.LogException(ex);
+            //}
+
+            //try
+            //{
             //    Logger.Log("Kingshome Started");
             //    new Kingshome_IntegrationShoper();
             //    Logger.Log("Kingshome Ended");

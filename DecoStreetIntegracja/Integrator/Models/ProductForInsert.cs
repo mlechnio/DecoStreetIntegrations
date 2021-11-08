@@ -23,7 +23,7 @@ namespace DecoStreetIntegracja.Integrator.Models
 
     public class ProductTranslations
     {
-        public Translation pl_PL { get; set; }
+        public Translation pl_PL { get; set; } = new Translation();
     }
 
     public class Translation
@@ -32,7 +32,9 @@ namespace DecoStreetIntegracja.Integrator.Models
 
         public string description { get; set; }
 
-        public bool active { get; set; }
+        public string short_description { get; set; }
+
+        public string active { get; set; }
 
         public string seo_url { get; set; } // maybe later
     }

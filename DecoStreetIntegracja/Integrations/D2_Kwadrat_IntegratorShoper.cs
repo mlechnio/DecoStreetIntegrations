@@ -65,7 +65,21 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override string GetDescriptionFromNode(XmlNode sourceNode)
         {
-            return sourceNode["opis_tekstowy"].InnerText;
+            var descSplit = sourceNode["opis_tekstowy"].InnerText.Split(new string[] { "\r\n\r\n" }, StringSplitOptions.None);
+
+            for (int i = 0; i < descSplit.Length; i++)
+            {
+                descSplit[i] = "<p>" + descSplit[i].Replace("\r\n", "</p><p>") + "</p>";
+            }
+
+            var desc = string.Join("<br>", descSplit);
+
+            return desc
+                + (!string.IsNullOrWhiteSpace(sourceNode["wysokosc"].InnerText) ? "<p>Wysokość: " + sourceNode["wysokosc"].InnerText + " cm</p>" : string.Empty)
+                + (!string.IsNullOrWhiteSpace(sourceNode["szerokosc"].InnerText) ? "<p>Szerokość: " + sourceNode["szerokosc"].InnerText + " cm</p>" : string.Empty)
+                + (!string.IsNullOrWhiteSpace(sourceNode["glebokosc"].InnerText) ? "<p>Głębokość: " + sourceNode["glebokosc"].InnerText + " cm</p>" : string.Empty)
+                + (!string.IsNullOrWhiteSpace(sourceNode["wys_siedziska"].InnerText) ? "<p>Wysokość siedziska: " + sourceNode["wys_siedziska"].InnerText + " cm</p>" : string.Empty)
+                + (!string.IsNullOrWhiteSpace(sourceNode["wys_Polokietnikow"].InnerText) ? "<p>Wysokość podłokietników: " + sourceNode["wys_Polokietnikow"].InnerText + " cm</p>" : string.Empty);
         }
 
         internal override int GetDeliveryId()

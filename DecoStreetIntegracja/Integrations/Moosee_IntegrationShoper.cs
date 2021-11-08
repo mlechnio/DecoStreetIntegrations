@@ -44,7 +44,21 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override string GetDescriptionFromNode(XmlNode sourceNode)
         {
-            return sourceNode["opis"].InnerText;
+            var descSplit = sourceNode["opis"].InnerText.Split(new string[] { "\r\n\r\n" }, StringSplitOptions.None);
+
+            for (int i = 0; i < descSplit.Length; i++)
+            {
+                descSplit[i] = "<p>" + descSplit[i].Replace("\r\n", "</p><p>") + "</p>";
+            }
+
+            var desc = string.Join("<br>", descSplit);
+
+            return desc
+                + (!string.IsNullOrWhiteSpace(sourceNode["wysokosc_calkowita"].InnerText) ? "<p>Wysokość całkowita: " + sourceNode["wysokosc_calkowita"].InnerText + " cm</p>" : string.Empty)
+                + (!string.IsNullOrWhiteSpace(sourceNode["szerokosc"].InnerText) ? "<p>Szerokość: " + sourceNode["szerokosc"].InnerText + " cm</p>" : string.Empty)
+                + (!string.IsNullOrWhiteSpace(sourceNode["glebokosc"].InnerText) ? "<p>Głębokość: " + sourceNode["glebokosc"].InnerText + " cm</p>" : string.Empty)
+                + (!string.IsNullOrWhiteSpace(sourceNode["wysokosc_podlokietnikow"].InnerText) ? "<p>Wysokość podłokietników: " + sourceNode["wysokosc_podlokietnikow"].InnerText + " cm</p>" : string.Empty)
+                + (!string.IsNullOrWhiteSpace(sourceNode["wysokosc_krawedzi_siedziska"].InnerText) ? "<p>Wysokość krawędzi siedziska: " + sourceNode["wysokosc_krawedzi_siedziska"].InnerText + " cm</p>" : string.Empty);
         }
 
         internal override string GetIdFromNode(XmlNode sourceNode)
