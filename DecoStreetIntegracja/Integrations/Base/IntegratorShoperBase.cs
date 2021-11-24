@@ -38,7 +38,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             Dispose();
         }
 
-        internal void ProcessProduct(XmlNode sourceNode, bool insertNew = true, bool updateDescriptions = false)
+        internal void ProcessProduct(XmlNode sourceNode, bool insertNew = true, bool updateDescriptions = false, bool canChangePromotion = false)
         {
             var productCode = IdPrefix + GetIdFromNode(sourceNode);
             var productsToProcess = new List<string>();
@@ -50,7 +50,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             //productsToProcess.Add("DK241858");
             //productsToProcess.Add("DK205135");
             //productsToProcess.Add("DK255183");
-            //productsToProcess.Add("khdeco34395");
+            //productsToProcess.Add("khdeco405");
             //productsToProcess.Add("khdeco34400");
             //productsToProcess.Add("khdeco34405");
             //productsToProcess.Add("khdeco34415");
@@ -77,7 +77,7 @@ namespace DecoStreetIntegracja.Integrations.Base
 
                 if (existingProduct != null)
                 {
-                    var productForUpdate = GenerateProductForUpdate(existingProduct, sourceNode, updateDescriptions);
+                    var productForUpdate = GenerateProductForUpdate(existingProduct, sourceNode, updateDescriptions, canChangePromotion);
                     if (productForUpdate != null)
                     {
                         UpdateProduct(productForUpdate);
@@ -208,7 +208,7 @@ namespace DecoStreetIntegracja.Integrations.Base
 
         internal abstract int GetDeliveryId();
 
-        private ProductForUpdate GenerateProductForUpdate(Product existingProduct, XmlNode sourceNode, bool updateDescription)
+        private ProductForUpdate GenerateProductForUpdate(Product existingProduct, XmlNode sourceNode, bool updateDescription, bool canChangePromotion = false)
         {
             var inPromo = GetIsInPromo(sourceNode);
             var priceNew = inPromo ? GetPriceBeforeDiscount(sourceNode) : GetPriceFromNode(sourceNode);
@@ -216,7 +216,7 @@ namespace DecoStreetIntegracja.Integrations.Base
 
             var priceChanged = existingProduct.stock.price != priceNew;
             var stockChanged = existingProduct.stock.stock != stockNew;
-            var promoPriceChanged = existingProduct.stock.comp_promo_price != GetPriceFromNode(sourceNode);
+            var promoPriceChanged = canChangePromotion && existingProduct.stock.comp_promo_price != GetPriceFromNode(sourceNode);
             var stylePriceChanged = priceChanged ? "style=\"color:red\"" : "";
             var styleStockChanged = stockChanged ? "style=\"color:red\"" : "";
 
@@ -246,13 +246,13 @@ namespace DecoStreetIntegracja.Integrations.Base
                         delivery_id = GetDeliveryId(),
                         //weight = 30,
                     },
-                    special_offer = inPromo && (promoPriceChanged || existingProduct.special_offer == null) ? new SpecialOffer
+                    special_offer = inPromo && canChangePromotion && (promoPriceChanged || existingProduct.special_offer == null) ? new SpecialOffer
                     {
                         discount = GetPriceBeforeDiscount(sourceNode) - GetPriceFromNode(sourceNode),
                         date_from = GetPromoStartDateFromNode(sourceNode),
                         date_to = GetPromoEndDateFromNode(sourceNode),
                     } : null,
-                    RemovePromotion = !inPromo && existingProduct.special_offer != null,
+                    RemovePromotion = canChangePromotion && (!inPromo && existingProduct.special_offer != null),
                 };
 
                 if (updateDescription)

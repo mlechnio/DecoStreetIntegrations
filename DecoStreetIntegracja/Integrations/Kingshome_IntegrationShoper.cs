@@ -37,7 +37,7 @@ namespace DecoStreetIntegracja.Integrations
 
             for (int i = 0; i < list.Count; i++)
             {
-                ProcessProduct(list[i], false);
+                ProcessProduct(list[i], insertNew: false);
             }
 
             var toDelete = xmlNodeList.Cast<XmlNode>().Where(sourceNode => sourceNode["produkt_wycofany"].InnerText == "TAK").ToList();

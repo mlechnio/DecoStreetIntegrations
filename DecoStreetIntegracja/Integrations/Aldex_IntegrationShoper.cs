@@ -13,7 +13,7 @@ namespace DecoStreetIntegracja.Integrations
 {
     public class Aldex_IntegrationShoper : IntegratorShoperBase
     {
-        internal override string SourcePath => @"C:\Users\mariu\Downloads\cennik.xml";
+        internal override string SourcePath => @"C:\Users\mariu\Downloads\cennik2.xml";
 
         internal override string IdPrefix => "Aldex";
 
@@ -52,7 +52,7 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override int GetDeliveryId()
         {
-            return 11;
+            return 8;
         }
 
         internal override string GetDescriptionFromNode(XmlNode sourceNode)

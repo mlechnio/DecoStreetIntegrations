@@ -34,7 +34,7 @@ namespace DecoStreetIntegracja.Integrations
 
             for (int i = 0; i < list.Count; i++)
             {
-                ProcessProduct(list[i]);
+                ProcessProduct(list[i], canChangePromotion: true);
             }
         }
 
