@@ -227,11 +227,11 @@ namespace DecoStreetIntegracja.Integrations.Base
                 //{
                 //    Logger.Log($"UPDATING weight to 30");
                 //}
-                if (inPromo && (promoPriceChanged || existingProduct.special_offer == null))
+                if (canChangePromotion && inPromo && (promoPriceChanged || existingProduct.special_offer == null))
                 {
                     Logger.Log($"UPDATING adding special_offer");
                 }
-                if (!inPromo && existingProduct.special_offer != null)
+                if (canChangePromotion && (!inPromo && existingProduct.special_offer != null))
                 {
                     Logger.Log($"UPDATING removing special_offer");
                 }
