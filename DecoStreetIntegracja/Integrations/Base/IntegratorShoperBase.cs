@@ -42,7 +42,7 @@ namespace DecoStreetIntegracja.Integrations.Base
         {
             var productCode = IdPrefix + GetIdFromNode(sourceNode);
             var productsToProcess = new List<string>();
-            //productsToProcess.Add("DK112617");
+            //productsToProcess.Add("DK192197");
             //productsToProcess.Add("DK243978");
             //productsToProcess.Add("DK162354");
             //productsToProcess.Add("DK205956");
@@ -220,18 +220,22 @@ namespace DecoStreetIntegracja.Integrations.Base
             var stylePriceChanged = priceChanged ? "style=\"color:red\"" : "";
             var styleStockChanged = stockChanged ? "style=\"color:red\"" : "";
 
-            if (updateDescription || promoPriceChanged || priceChanged || stockChanged)
+            var promoEndDate = GetPromoEndDateFromNode(sourceNode).Split('-').Length == 3 ? new DateTime(int.Parse(GetPromoEndDateFromNode(sourceNode).Split('-')[0]), int.Parse(GetPromoEndDateFromNode(sourceNode).Split('-')[1]), int.Parse(GetPromoEndDateFromNode(sourceNode).Split('-')[2])) : DateTime.MinValue;
+            var addingPromo = canChangePromotion && inPromo && (promoPriceChanged || existingProduct.special_offer == null) && promoEndDate > DateTime.Today;
+            var removingPromo = canChangePromotion && (!inPromo && existingProduct.special_offer != null);
+
+            if (updateDescription || addingPromo || removingPromo || priceChanged || stockChanged)
             {
                 Logger.Log($"UPDATING <strong>{existingProduct.code}</strong>, PRICE: {existingProduct.stock.price} -> <strong {stylePriceChanged} >{priceNew}</strong>, STOCK: {existingProduct.stock.stock} -> <strong {styleStockChanged}>{stockNew}</strong>");
                 //if (existingProduct.stock.weight != 30)
                 //{
                 //    Logger.Log($"UPDATING weight to 30");
                 //}
-                if (canChangePromotion && inPromo && (promoPriceChanged || existingProduct.special_offer == null))
+                if (addingPromo)
                 {
                     Logger.Log($"UPDATING adding special_offer");
                 }
-                if (canChangePromotion && (!inPromo && existingProduct.special_offer != null))
+                if (removingPromo)
                 {
                     Logger.Log($"UPDATING removing special_offer");
                 }
@@ -246,13 +250,13 @@ namespace DecoStreetIntegracja.Integrations.Base
                         delivery_id = GetDeliveryId(),
                         //weight = 30,
                     },
-                    special_offer = inPromo && canChangePromotion && (promoPriceChanged || existingProduct.special_offer == null) ? new SpecialOffer
+                    special_offer = addingPromo ? new SpecialOffer
                     {
                         discount = GetPriceBeforeDiscount(sourceNode) - GetPriceFromNode(sourceNode),
                         date_from = GetPromoStartDateFromNode(sourceNode),
                         date_to = GetPromoEndDateFromNode(sourceNode),
                     } : null,
-                    RemovePromotion = canChangePromotion && (!inPromo && existingProduct.special_offer != null),
+                    RemovePromotion = removingPromo,
                 };
 
                 if (updateDescription)
