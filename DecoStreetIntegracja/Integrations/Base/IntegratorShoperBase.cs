@@ -220,7 +220,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             var stylePriceChanged = priceChanged ? "style=\"color:red\"" : "";
             var styleStockChanged = stockChanged ? "style=\"color:red\"" : "";
 
-            var promoEndDate = GetPromoEndDateFromNode(sourceNode).Split('-').Length == 3 ? new DateTime(int.Parse(GetPromoEndDateFromNode(sourceNode).Split('-')[0]), int.Parse(GetPromoEndDateFromNode(sourceNode).Split('-')[1]), int.Parse(GetPromoEndDateFromNode(sourceNode).Split('-')[2])) : DateTime.MinValue;
+            var promoEndDate = canChangePromotion && GetPromoEndDateFromNode(sourceNode).Split('-').Length == 3 ? new DateTime(int.Parse(GetPromoEndDateFromNode(sourceNode).Split('-')[0]), int.Parse(GetPromoEndDateFromNode(sourceNode).Split('-')[1]), int.Parse(GetPromoEndDateFromNode(sourceNode).Split('-')[2])) : DateTime.MinValue;
             var addingPromo = canChangePromotion && inPromo && (promoPriceChanged || existingProduct.special_offer == null) && promoEndDate > DateTime.Today;
             var removingPromo = canChangePromotion && (!inPromo && existingProduct.special_offer != null);
 
