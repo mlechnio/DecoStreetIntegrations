@@ -42,7 +42,7 @@ namespace DecoStreetIntegracja.Integrations.Base
         {
             var productCode = IdPrefix + GetIdFromNode(sourceNode);
             var productsToProcess = new List<string>();
-            //productsToProcess.Add("DK192197");
+            //productsToProcess.Add("DK235312");
             //productsToProcess.Add("DK243978");
             //productsToProcess.Add("DK162354");
             //productsToProcess.Add("DK205956");
@@ -97,6 +97,13 @@ namespace DecoStreetIntegracja.Integrations.Base
                     {
 
                         var product = GenerateProductForInsert(sourceNode);
+
+                        if (product.stock.price == 0)
+                        {
+                            Logger.Log($"WARNING {productCode}, <strong>PRICE ZERO</strong>");
+                            return;
+                        }
+
                         var product_id = InsertProduct(product);
 
                         if (product_id == 0)
@@ -217,8 +224,8 @@ namespace DecoStreetIntegracja.Integrations.Base
             var priceChanged = existingProduct.stock.price != priceNew;
             var stockChanged = existingProduct.stock.stock != stockNew;
             var promoPriceChanged = canChangePromotion && existingProduct.stock.comp_promo_price != GetPriceFromNode(sourceNode);
-            var stylePriceChanged = priceChanged ? "style=\"color:red\"" : "";
-            var styleStockChanged = stockChanged ? "style=\"color:red\"" : "";
+            var stylePriceChanged = priceChanged ? existingProduct.stock.price < priceNew ? "style=\"color:red\"" : "style=\"color:green\"" : "";
+            var styleStockChanged = stockChanged ? existingProduct.stock.stock > stockNew ? "style=\"color:red\"" : "style=\"color:green\"" : "";
 
             var promoEndDate = canChangePromotion && GetPromoEndDateFromNode(sourceNode).Split('-').Length == 3 ? new DateTime(int.Parse(GetPromoEndDateFromNode(sourceNode).Split('-')[0]), int.Parse(GetPromoEndDateFromNode(sourceNode).Split('-')[1]), int.Parse(GetPromoEndDateFromNode(sourceNode).Split('-')[2])) : DateTime.MinValue;
             var addingPromo = canChangePromotion && inPromo && (promoPriceChanged || existingProduct.special_offer == null) && promoEndDate > DateTime.Today;
