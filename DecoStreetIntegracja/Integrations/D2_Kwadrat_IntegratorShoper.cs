@@ -115,7 +115,12 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override string GetPromoStartDateFromNode(XmlNode sourceNode)
         {
-            return sourceNode["promocja_od_dnia"].InnerText;
+            var dateString = sourceNode["promocja_od_dnia"].InnerText;
+            if ("1900-01-01" == dateString)
+            {
+                dateString = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            return dateString;
         }
 
         internal override string GetPromoEndDateFromNode(XmlNode sourceNode)

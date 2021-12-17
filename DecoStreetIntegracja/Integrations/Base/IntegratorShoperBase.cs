@@ -42,7 +42,7 @@ namespace DecoStreetIntegracja.Integrations.Base
         {
             var productCode = IdPrefix + GetIdFromNode(sourceNode);
             var productsToProcess = new List<string>();
-            //productsToProcess.Add("DK235312");
+            //productsToProcess.Add("DK237517");
             //productsToProcess.Add("DK243978");
             //productsToProcess.Add("DK162354");
             //productsToProcess.Add("DK205956");
@@ -62,9 +62,9 @@ namespace DecoStreetIntegracja.Integrations.Base
             //productsToProcess.Add("khdeco34485");
             //productsToProcess.Add("khdeco34521");
 
-            if (!productsToProcess.Contains(productCode))
+            if (productsToProcess.Any() && !productsToProcess.Contains(productCode))
             {
-                //return;
+                return;
             }
 
             try
@@ -240,11 +240,11 @@ namespace DecoStreetIntegracja.Integrations.Base
                 //}
                 if (addingPromo)
                 {
-                    Logger.Log($"UPDATING adding special_offer");
+                    Logger.Log($"UPDATING ADDING PROMOTION: PRICE: <strong style=\"color:green\">{GetPriceFromNode(sourceNode)}</strong>");
                 }
                 if (removingPromo)
                 {
-                    Logger.Log($"UPDATING removing special_offer");
+                    Logger.Log($"UPDATING REMOVING PROMOTION");
                 }
 
                 var productToUpdate = new ProductForUpdate
