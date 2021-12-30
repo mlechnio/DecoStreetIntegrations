@@ -42,7 +42,7 @@ namespace DecoStreetIntegracja.Integrations.Base
         {
             var productCode = IdPrefix + GetIdFromNode(sourceNode);
             var productsToProcess = new List<string>();
-            //productsToProcess.Add("DK237517");
+            //productsToProcess.Add("DK191818");
             //productsToProcess.Add("DK243978");
             //productsToProcess.Add("DK162354");
             //productsToProcess.Add("DK205956");
@@ -95,12 +95,11 @@ namespace DecoStreetIntegracja.Integrations.Base
                 {
                     if (insertNew)
                     {
-
                         var product = GenerateProductForInsert(sourceNode);
 
                         if (product.stock.price == 0)
                         {
-                            Logger.Log($"WARNING {productCode}, <strong>PRICE ZERO</strong>");
+                            Logger.Log($"ERROR {productCode}, <strong style=\"color:red\">BAD DATA - PRICE ZERO</strong>");
                             return;
                         }
 
@@ -241,6 +240,12 @@ namespace DecoStreetIntegracja.Integrations.Base
                 if (addingPromo)
                 {
                     Logger.Log($"UPDATING ADDING PROMOTION: PRICE: <strong style=\"color:green\">{GetPriceFromNode(sourceNode)}</strong>");
+
+                    if (GetPriceBeforeDiscount(sourceNode) - GetPriceFromNode(sourceNode) < 0)
+                    {
+                        Logger.Log($"ERROR {existingProduct.code}, <strong style=\"color:red\">BAD DATA - PROMO PRICE HIGHER THAN REGULAR PRICE</strong>");
+                        return default;
+                    }
                 }
                 if (removingPromo)
                 {
