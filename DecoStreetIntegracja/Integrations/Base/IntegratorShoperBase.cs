@@ -42,7 +42,7 @@ namespace DecoStreetIntegracja.Integrations.Base
         {
             var productCode = IdPrefix + GetIdFromNode(sourceNode);
             var productsToProcess = new List<string>();
-            //productsToProcess.Add("DK191818");
+            //productsToProcess.Add("khdeco4765");
             //productsToProcess.Add("DK243978");
             //productsToProcess.Add("DK162354");
             //productsToProcess.Add("DK205956");
@@ -177,7 +177,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             product.pkwiu = string.Empty;
             product.stock.stock = stock;
             product.stock.price = price;
-            product.stock.weight = 30;
+            product.stock.weight = 0;
             product.stock.delivery_id = GetDeliveryId();
 
             product.translations.pl_PL = new Translation
@@ -260,7 +260,7 @@ namespace DecoStreetIntegracja.Integrations.Base
                         price = priceNew,
                         stock = stockNew,
                         delivery_id = GetDeliveryId(),
-                        //weight = 30,
+                        weight = existingProduct.stock.weight,
                     },
                     special_offer = addingPromo ? new SpecialOffer
                     {
