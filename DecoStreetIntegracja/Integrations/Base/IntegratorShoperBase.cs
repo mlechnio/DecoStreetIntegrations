@@ -116,7 +116,15 @@ namespace DecoStreetIntegracja.Integrations.Base
                         foreach (var item in GenerateImagesForInsert2(product_id, sourceNode))
                         {
                             Thread.Sleep(1000);
-                            InsertProductImage(item);
+                            try
+                            {
+                                InsertProductImage(item);
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log($"ERROR ADDING IMAGE {productCode}, <strong>EXCEPTION</strong>: {ex.Message}");
+                                Logger.LogException(ex);
+                            }
                         }
                     }
                 }

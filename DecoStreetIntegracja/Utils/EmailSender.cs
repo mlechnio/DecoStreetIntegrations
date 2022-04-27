@@ -16,7 +16,7 @@ namespace DecoStreetIntegracja.Utils
 
             if (Logger.NewProducts.Any())
             {
-                SendEmail(string.Join("<br>", Logger.NewProducts), "Dodano nowe produkty", "mariusz.lechnio@gmail.com");
+                SendEmail(string.Join("<br>", Logger.NewProducts), "Dodano nowe produkty", "mariusz.lechnio@gmail.com", "sklep@decostreet.pl");
             }
 
             if (Logger.Exceptions.Any())
@@ -25,7 +25,7 @@ namespace DecoStreetIntegracja.Utils
             }
         }
 
-        private void SendEmail(string body, string subject, string recipient)
+        private void SendEmail(string body, string subject, string recipient, string cc = "")
         {
             try
             {
@@ -36,6 +36,11 @@ namespace DecoStreetIntegracja.Utils
                     IsBodyHtml = true,
                     Body = body
                 };
+
+                if (!string.IsNullOrWhiteSpace(cc))
+                {
+                    message.To.Add(new MailAddress(cc));
+                }
 
                 var client = new SmtpClient("s.mail.dcsaas.net", 587)
                 {
