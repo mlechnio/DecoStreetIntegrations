@@ -38,6 +38,11 @@ namespace DecoStreetIntegracja.Integrations
             }
         }
 
+        internal override int? GetProducerId()
+        {
+            return 21;
+        }
+
         internal override decimal GetPriceFromNode(XmlNode sourceNode)
         {
             return decimal.Parse(sourceNode["cena_brutto"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);

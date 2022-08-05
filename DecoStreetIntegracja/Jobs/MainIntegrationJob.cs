@@ -46,27 +46,39 @@ namespace DecoStreetIntegracja.Jobs
             //    Logger.LogException(ex);
             //}
 
-            try
-            {
-                Logger.Log("Kingshome Started");
-                new Kingshome_IntegrationShoper();
-                Logger.Log("Kingshome Ended");
-            }
-            catch (Exception ex)
-            {
-                Logger.LogException(ex);
-            }
-
             //try
             //{
-            //    Logger.Log("Malodesign Started");
-            //    new Malodesign_IntegrationShoper();
-            //    Logger.Log("Malodesign Ended");
+            //    Logger.Log("Atos Started");
+            //    new Atos_IntegrationShoper();
+            //    Logger.Log("Atos Ended");
             //}
             //catch (Exception ex)
             //{
             //    Logger.LogException(ex);
             //}
+
+            //try
+            //{
+            //    Logger.Log("Emibig Started");
+            //    new Emibig_IntegrationShoper();
+            //    Logger.Log("Emibig Ended");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.LogException(ex);
+            //}
+
+
+            try
+            {
+                Logger.Log("Malodesign Started");
+                new Malodesign_IntegrationShoper();
+                Logger.Log("Malodesign Ended");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+            }
 
             //try
             //{

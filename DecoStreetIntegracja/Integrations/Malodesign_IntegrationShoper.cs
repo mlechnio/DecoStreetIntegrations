@@ -38,6 +38,11 @@ namespace DecoStreetIntegracja.Integrations
             return 11;
         }
 
+        internal override int? GetProducerId()
+        {
+            return 254;
+        }
+
         internal override string GetDescriptionFromNode(XmlNode sourceNode)
         {
             return sourceNode["desc"].InnerText;

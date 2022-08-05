@@ -60,12 +60,14 @@
     <Compile Include="Integrations\Aldex_IntegrationShoper.cs" />
     <Compile Include="Integrations\Aluro_Integration.cs" />
     <Compile Include="Integrations\ArtPol_Integration.cs" />
+    <Compile Include="Integrations\Atos_IntegrationShoper.cs" />
     <Compile Include="Integrations\Base\IntegratorShoperBase.cs" />
     <Compile Include="Integrations\Base\IntegrationBase.cs" />
     <Compile Include="Integrations\CustomFormGoogle_Integration.cs" />
     <Compile Include="Integrations\CustomForm_Integration.cs" />
     <Compile Include="Integrations\D2_Kwadrat_IntegratorShoper.cs" />
     <Compile Include="Integrations\Durbas_Integration.cs" />
+    <Compile Include="Integrations\Emibig_IntegrationShoper.cs" />
     <Compile Include="Integrations\Kingshome_IntegrationShoper.cs" />
     <Compile Include="Integrations\Kingshome_Integration.cs" />
     <Compile Include="Integrations\Malodesign_Integration.cs" />

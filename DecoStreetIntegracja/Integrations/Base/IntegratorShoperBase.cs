@@ -183,6 +183,7 @@ namespace DecoStreetIntegracja.Integrations.Base
 
             product.code = IdPrefix + GetIdFromNode(sourceNode);
             product.pkwiu = string.Empty;
+            product.producer_id = GetProducerId();
             product.stock.stock = stock;
             product.stock.price = price;
             product.stock.weight = 0;
@@ -221,6 +222,8 @@ namespace DecoStreetIntegracja.Integrations.Base
         internal abstract string GetPromoEndDateFromNode(XmlNode sourceNode);
 
         internal abstract int GetDeliveryId();
+
+        internal virtual int? GetProducerId() => null;
 
         private ProductForUpdate GenerateProductForUpdate(Product existingProduct, XmlNode sourceNode, bool updateDescription, bool canChangePromotion = false)
         {

@@ -72,6 +72,11 @@ namespace DecoStreetIntegracja.Integrations
             return 11;
         }
 
+        internal override int? GetProducerId()
+        {
+            return 288;
+        }
+
         internal override string GetDescriptionFromNode(XmlNode sourceNode)
         {
             var descSplit = sourceNode["opis"].InnerText.Split(new string[] { "\r\n\r\n" }, StringSplitOptions.None);

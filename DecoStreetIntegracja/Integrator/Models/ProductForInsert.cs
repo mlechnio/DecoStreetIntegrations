@@ -10,6 +10,8 @@ namespace DecoStreetIntegracja.Integrator.Models
     {
         public int category_id { get; set; } = 1362;
 
+        public int? producer_id { get; set; }
+
         public string code { get; set; }
 
         public string pkwiu { get; set; }
