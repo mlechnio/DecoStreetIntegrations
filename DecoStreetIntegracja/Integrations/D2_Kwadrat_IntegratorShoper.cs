@@ -121,7 +121,7 @@ namespace DecoStreetIntegracja.Integrations
         internal override string GetPromoStartDateFromNode(XmlNode sourceNode)
         {
             var dateString = sourceNode["promocja_od_dnia"].InnerText;
-            if ("1900-01-01" == dateString || (DateTime.TryParse(dateString, new CultureInfo("pl-PL"), DateTimeStyles.None, out DateTime parsedDate) && parsedDate < DateTime.Now))
+            if ("1900-01-01" == dateString || (DateTime.TryParse(dateString, out DateTime parsedDate) && parsedDate < DateTime.Now))
             {
                 dateString = DateTime.Now.ToString("yyyy-MM-dd");
             }
