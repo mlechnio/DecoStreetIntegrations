@@ -42,16 +42,16 @@ namespace DecoStreetIntegracja.Integrations.Base
         {
             var productCode = IdPrefix + GetIdFromNode(sourceNode);
             var productsToProcess = new List<string>();
-            //productsToProcess.Add("khdeco4765");
-            //productsToProcess.Add("DK243978");
-            //productsToProcess.Add("DK162354");
-            //productsToProcess.Add("DK205956");
-            //productsToProcess.Add("DK206010");
-            //productsToProcess.Add("DK241858");
-            //productsToProcess.Add("DK205135");
-            //productsToProcess.Add("DK255183");
-            //productsToProcess.Add("khdeco405");
-            //productsToProcess.Add("khdeco34400");
+            //productsToProcess.Add("DK282514");
+            //productsToProcess.Add("DK211691");
+            //productsToProcess.Add("DK190439");
+            //productsToProcess.Add("DK9754");
+            //productsToProcess.Add("DK24947");
+            //productsToProcess.Add("DK63285");
+            //productsToProcess.Add("DK185380");
+            //productsToProcess.Add("DK127117");
+            //productsToProcess.Add("DK127125");
+            //productsToProcess.Add("DK150124");
             //productsToProcess.Add("khdeco34405");
             //productsToProcess.Add("khdeco34415");
             //productsToProcess.Add("khdeco34420");
@@ -71,7 +71,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             {
                 Console.WriteLine($"Processing product: {productCode}");
 
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
 
                 var existingProduct = GetExistingProduct(productCode);
 
@@ -110,12 +110,11 @@ namespace DecoStreetIntegracja.Integrations.Base
                             return;
                         }
 
-                        Logger.Log($"ADDED {product.code}, PRICE: {product.stock.price}, QUANTITY: {product.stock.stock}");
-                        Logger.NewProducts.Add(product.code);
+                        var errorAddingImages = false;
 
                         foreach (var item in GenerateImagesForInsert2(product_id, sourceNode))
                         {
-                            Thread.Sleep(1000);
+                            Thread.Sleep(500);
                             try
                             {
                                 InsertProductImage(item);
@@ -124,8 +123,13 @@ namespace DecoStreetIntegracja.Integrations.Base
                             {
                                 Logger.Log($"ERROR ADDING IMAGE {productCode}, <strong>EXCEPTION</strong>: {ex.Message}");
                                 Logger.LogException(ex);
+                                errorAddingImages = true;
                             }
                         }
+
+                        Logger.Log($"ADDED {product.code}, PRICE: {product.stock.price}, QUANTITY: {product.stock.stock}");
+
+                        Logger.NewProducts.Add($"{product.code}{(errorAddingImages ? " - wystąpiły błędy przy dodawaniu obrazów!" : "")}");
                     }
                 }
             }
