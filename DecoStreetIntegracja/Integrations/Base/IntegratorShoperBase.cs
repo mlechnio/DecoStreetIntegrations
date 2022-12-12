@@ -129,7 +129,7 @@ namespace DecoStreetIntegracja.Integrations.Base
 
                         Logger.Log($"ADDED {product.code}, PRICE: {product.stock.price}, QUANTITY: {product.stock.stock}");
 
-                        Logger.NewProducts.Add($"{product.code}{(errorAddingImages ? " - wystąpiły błędy przy dodawaniu obrazów!" : "")}");
+                        Logger.NewProducts.Add($"{product.code}{(errorAddingImages ? " - wystąpiły błędy przy dodawaniu obrazów!!" : "")}");
                     }
                 }
             }
