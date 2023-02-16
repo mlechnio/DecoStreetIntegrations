@@ -69,27 +69,38 @@ namespace DecoStreetIntegracja.Jobs
             //}
 
 
-            try
-            {
-                Logger.Log("Malodesign Started");
-                new Malodesign_IntegrationShoper();
-                Logger.Log("Malodesign Ended");
-            }
-            catch (Exception ex)
-            {
-                Logger.LogException(ex);
-            }
-
             //try
             //{
-            //    Logger.Log("D2_Kwadrat Started");
-            //    new D2_Kwadrat_IntegratorShoper();
-            //    Logger.Log("D2_Kwadrat Ended");
+            //    Logger.Log("Malodesign Started");
+            //    new Malodesign_IntegrationShoper();
+            //    Logger.Log("Malodesign Ended");
             //}
             //catch (Exception ex)
             //{
             //    Logger.LogException(ex);
             //}
+
+            //try
+            //{
+            //    Logger.Log("Kingshome Started");
+            //    new Kingshome_IntegrationShoper();
+            //    Logger.Log("Kingshome Ended");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.LogException(ex);
+            //}
+
+            try
+            {
+                Logger.Log("D2_Kwadrat Started");
+                new D2_Kwadrat_IntegratorShoper();
+                Logger.Log("D2_Kwadrat Ended");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+            }
         }
 
         private void RunShoper()
@@ -127,16 +138,16 @@ namespace DecoStreetIntegracja.Jobs
                 Logger.LogException(ex);
             }
 
-            try
-            {
-                Logger.Log("Malodesign Started");
-                new Malodesign_IntegrationShoper();
-                Logger.Log("Malodesign Ended");
-            }
-            catch (Exception ex)
-            {
-                Logger.LogException(ex);
-            }
+            //try
+            //{
+            //    Logger.Log("Malodesign Started");
+            //    new Malodesign_IntegrationShoper();
+            //    Logger.Log("Malodesign Ended");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.LogException(ex);
+            //}
         }
 
         private void RunProd()

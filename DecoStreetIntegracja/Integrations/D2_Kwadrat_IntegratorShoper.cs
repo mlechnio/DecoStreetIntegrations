@@ -28,7 +28,10 @@ namespace DecoStreetIntegracja.Integrations
             xmlDocument.Load(sourceStream);
             var xmlNodeList = xmlDocument.SelectNodes("//produkty/produkt");
 
-            var list = xmlNodeList.Cast<XmlNode>().Where(x => EnabledData.enabledD2Categories.Contains(x["kategoria_glowna"].InnerText)).ToList();
+            var list = xmlNodeList.Cast<XmlNode>().Where(x =>
+            EnabledData.enabledD2Categories.Contains(x["kategoria_glowna"].InnerText) ||
+            (x["kategoria_glowna"].InnerText.ToLower() == "akcesoria pozostałe" && x["nazwa"].InnerText.ToLower().Contains("wieszak"))
+            ).ToList();
 
             Logger.Log($"To process: {list.Count}");
 

@@ -31,7 +31,11 @@ namespace DecoStreetIntegracja.Integrations
             var categories = new List<string> { "fotele", "hokery", "krzesła", "oświetlenie", "stoły", "szafki", "stołki", "stoliki", "podnóżki", "biurka", "krzesła barowe" };
 
             var list = xmlNodeList.Cast<XmlNode>()
-                .Where(sourceNode => sourceNode["producent"].InnerText != "Moosee" && categories.Contains(sourceNode["kategoria_glowna"].InnerText.ToLower()) && sourceNode["produkt_wycofany"].InnerText == "NIE").ToList();
+                .Where(sourceNode =>
+                sourceNode["producent"].InnerText != "Moosee"
+                && (categories.Contains(sourceNode["kategoria_glowna"].InnerText.ToLower()) || (sourceNode["kategoria_glowna"].InnerText.ToLower() == "akcesoria" && sourceNode["kategoria_wielopoziomowa"].InnerText.ToLower() == "wieszaki"))
+                && sourceNode["produkt_wycofany"].InnerText == "NIE"
+                ).ToList();
 
             Logger.Log($"To process: {list.Count}");
 
@@ -48,7 +52,7 @@ namespace DecoStreetIntegracja.Integrations
 
                 Console.WriteLine($"Trying to delete product: {productCode}");
 
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
 
                 var existingProduct = GetExistingProduct(productCode);
 
@@ -63,6 +67,10 @@ namespace DecoStreetIntegracja.Integrations
                     {
                         Logger.LogException(ex);
                     }
+                }
+                else
+                {
+                    Logger.Log($"Product already doesn't exist: {productCode}");
                 }
             }
         }

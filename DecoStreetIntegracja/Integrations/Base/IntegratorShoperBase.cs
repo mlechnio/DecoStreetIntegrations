@@ -42,25 +42,26 @@ namespace DecoStreetIntegracja.Integrations.Base
         {
             var productCode = IdPrefix + GetIdFromNode(sourceNode);
             var productsToProcess = new List<string>();
-            //productsToProcess.Add("DK282514");
-            //productsToProcess.Add("DK211691");
-            //productsToProcess.Add("DK190439");
-            //productsToProcess.Add("DK9754");
-            //productsToProcess.Add("DK24947");
-            //productsToProcess.Add("DK63285");
-            //productsToProcess.Add("DK185380");
-            //productsToProcess.Add("DK127117");
-            //productsToProcess.Add("DK127125");
-            //productsToProcess.Add("DK150124");
-            //productsToProcess.Add("khdeco34405");
-            //productsToProcess.Add("khdeco34415");
-            //productsToProcess.Add("khdeco34420");
-            //productsToProcess.Add("khdeco34440");
-            //productsToProcess.Add("khdeco34465");
-            //productsToProcess.Add("khdeco34470");
-            //productsToProcess.Add("khdeco34480");
-            //productsToProcess.Add("khdeco34485");
-            //productsToProcess.Add("khdeco34521");
+            //productsToProcess.Add("DK282742");
+            //productsToProcess.Add("DK162934");
+            //productsToProcess.Add("DK243978");
+            //productsToProcess.Add("DK162961");
+            //productsToProcess.Add("DK177541");
+            //productsToProcess.Add("DK162952");
+            //productsToProcess.Add("DK177532");
+            //productsToProcess.Add("DK238332");
+            //productsToProcess.Add("DK238341");
+            //productsToProcess.Add("DK263378");
+            //productsToProcess.Add("DK288620");
+            //productsToProcess.Add("DK187616");
+            //productsToProcess.Add("DK187681");
+            //productsToProcess.Add("DK121883");
+            //productsToProcess.Add("DK114819");
+            //productsToProcess.Add("DK187699");
+            //productsToProcess.Add("DK187663");
+            //productsToProcess.Add("DK334873");
+            //productsToProcess.Add("DK318675");
+            //productsToProcess.Add("DK187672");
 
             if (productsToProcess.Any() && !productsToProcess.Contains(productCode))
             {
@@ -111,6 +112,7 @@ namespace DecoStreetIntegracja.Integrations.Base
                         }
 
                         var errorAddingImages = false;
+                        var erroredImageUrl = new List<string>();
 
                         foreach (var item in GenerateImagesForInsert2(product_id, sourceNode))
                         {
@@ -124,12 +126,13 @@ namespace DecoStreetIntegracja.Integrations.Base
                                 Logger.Log($"ERROR ADDING IMAGE {productCode}, <strong>EXCEPTION</strong>: {ex.Message}");
                                 Logger.LogException(ex);
                                 errorAddingImages = true;
+                                erroredImageUrl.Add(item.url);
                             }
                         }
 
                         Logger.Log($"ADDED {product.code}, PRICE: {product.stock.price}, QUANTITY: {product.stock.stock}");
 
-                        Logger.NewProducts.Add($"{product.code}{(errorAddingImages ? " - wystąpiły błędy przy dodawaniu obrazów!!" : "")}");
+                        Logger.NewProducts.Add($"{product.code}{(errorAddingImages ? $" - wystąpiły błędy przy dodawaniu obrazów - {string.Join(" ", erroredImageUrl)}" : "")}");
                     }
                 }
             }
@@ -314,6 +317,9 @@ namespace DecoStreetIntegracja.Integrations.Base
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
+                //Console.WriteLine($"X-Shop-Api-Calls: {response.Headers.First(x => x.Name == "X-Shop-Api-Calls").Value}");
+                //Console.WriteLine($"X-Shop-Api-Limit: {response.Headers.First(x => x.Name == "X-Shop-Api-Limit").Value}");
+                //Console.WriteLine($"X-Shop-Api-Bandwidth: {response.Headers.First(x => x.Name == "X-Shop-Api-Bandwidth").Value}");
                 if (response.Data.count > 0)
                 {
                     return response.Data.list.SingleOrDefault(x => x.code == productCode);

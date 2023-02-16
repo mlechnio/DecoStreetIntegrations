@@ -24,7 +24,7 @@ namespace DecoStreetIntegracja.Utils
             "Krzesła dla dzieci",
             "Lampy",
             "Lustra",
-            "Podnóżki",
+            //"Podnóżki",
             "Poduszka",
             "Poduszki",
             "Pufy",
@@ -34,7 +34,11 @@ namespace DecoStreetIntegracja.Utils
             "Stołki",
             "Stołki barowe",
             "Stoły",
-            "Zegary"
+            "Zegary",
+            "Komody",
+            "Akcesoria dekoracyjne",
+            "Ławki",
+            "Szafki"
         };
 
         public static readonly List<string> enabledAluroIds = new List<string>()
