@@ -11,19 +11,17 @@ using System.Xml;
 
 namespace DecoStreetIntegracja.Integrations
 {
-    public class Aldex_IntegrationShoper : IntegratorShoperBase
+    public class Aldex2_IntegrationShoper : IntegratorShoperBase
     {
-        internal override string SourcePath => @"C:\Users\mariu\Downloads\cennik2.xml";
+        internal override string SourcePath => @"C:\Users\mariu\Downloads\produkty_xml_3_02-11-2023_20_06_29_pl.xml";
 
         internal override string IdPrefix => "Aldex";
 
         internal override void Process()
         {
             var xmlDocument = new XmlDocument();
-            var nsmgr = new XmlNamespaceManager(xmlDocument.NameTable);
-            nsmgr.AddNamespace("dupa", "http://www.cdn.com.pl/optima/dokument");
             xmlDocument.Load(sourceStream);
-            var xmlNodeList = xmlDocument.SelectNodes("//dupa:towar", nsmgr);
+            var xmlNodeList = xmlDocument.SelectNodes("/products/product");
 
             var list = xmlNodeList.Cast<XmlNode>().ToList();
 
@@ -57,31 +55,22 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override string GetDescriptionFromNode(XmlNode sourceNode)
         {
-            return 
-                $@"Wykończenie: {sourceNode["wykonczenie"].InnerText}<br>
-                Rodzaj trzonka: {sourceNode["rodzaj_trzonka"].InnerText}<br>
-                Max moc: {sourceNode["max._Wattage"].InnerText}<br>
-                Szerokość: {sourceNode["szerokosc_lampy"].InnerText} cm<br>
-                Wysokość: {sourceNode["wysokosc_lampy"].InnerText} cm<br>
-                Głębokość: {sourceNode["glebokosc_lampy"].InnerText} cm<br>
-                Średnica klosza: {sourceNode["srednica_klosz"].InnerText} cm<br>
-                Waga: {sourceNode["waga_lampy"].InnerText} kg
-                ";
+            return sourceNode["desc"].InnerText;
         }
 
         internal override string GetIdFromNode(XmlNode sourceNode)
         {
-            return sourceNode["twr_kod"].InnerText;
+            return sourceNode["sku"].InnerText;
         }
 
         internal override string GetNameFromNode(XmlNode sourceNode)
         {
-            return sourceNode["nazwa"].InnerText;
+            return sourceNode["name"].InnerText;
         }
 
         internal override decimal GetPriceFromNode(XmlNode sourceNode)
         {
-            return decimal.Parse(sourceNode["cena_brutto"].InnerText, CultureInfo.InvariantCulture);
+            return decimal.Parse(sourceNode["retailPriceGross"].InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
         }
 
         internal override decimal GetStockFromNode(XmlNode sourceNode)
@@ -91,12 +80,23 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override decimal GetWeightFromNode(XmlNode sourceNode)
         {
-            return decimal.Parse(sourceNode["waga_lampy"].InnerText, CultureInfo.InvariantCulture);
+            return 30;
         }
 
         internal override IEnumerable<string> GetImageUrls(XmlNode sourceNode)
         {
-            yield return sourceNode["zdjecie"].InnerText.Replace(" ", "%20");
+            if (sourceNode["photos"].ChildNodes.Count > 0)
+            {
+                yield return sourceNode["photos"].ChildNodes[0].InnerText.Replace(" ", "%20");
+
+                if (sourceNode["photos"].ChildNodes.Count > 1)
+                {
+                    for (var i = 1; i < sourceNode["photos"].ChildNodes.Count; ++i)
+                    {
+                        yield return sourceNode["photos"].ChildNodes[i].InnerText.Replace(" ", "%20");
+                    }
+                }
+            }
         }
 
         internal override decimal GetPriceBeforeDiscount(XmlNode sourceNode)
@@ -117,6 +117,11 @@ namespace DecoStreetIntegracja.Integrations
         internal override string GetPromoEndDateFromNode(XmlNode sourceNode)
         {
             throw new NotImplementedException();
+        }
+
+        internal override int? GetProducerId()
+        {
+            return 437;
         }
     }
 }

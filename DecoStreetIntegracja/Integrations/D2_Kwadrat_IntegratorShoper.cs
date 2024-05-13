@@ -18,7 +18,7 @@ namespace DecoStreetIntegracja.Integrations
     {
         internal override string SourcePath => "ftp://thyone.iq.pl/updatexml.xml";
 
-        internal override NetworkCredential SourceCredentials => new NetworkCredential("dkwadrat_UD2", "zhz907h");
+        internal override NetworkCredential SourceCredentials => new NetworkCredential("dkwadrat_UD2", "spJP8ksHTm1452$");
 
         internal override string IdPrefix => "DK";
 
@@ -37,7 +37,7 @@ namespace DecoStreetIntegracja.Integrations
 
             for (int i = 0; i < list.Count; i++)
             {
-                ProcessProduct(list[i], canChangePromotion: true);
+                ProcessProduct(list, i, list.Count, canChangePromotion: true);
             }
         }
 

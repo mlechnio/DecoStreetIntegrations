@@ -38,30 +38,11 @@ namespace DecoStreetIntegracja.Integrations.Base
             Dispose();
         }
 
-        internal void ProcessProduct(XmlNode sourceNode, bool insertNew = true, bool updateDescriptions = false, bool canChangePromotion = false)
+        internal void ProcessProduct(List<XmlNode> source, int idx, int count, bool insertNew = true, bool updateDescriptions = false, bool canChangePromotion = false, bool updateImages = false)
         {
+            var sourceNode = source[idx];
             var productCode = IdPrefix + GetIdFromNode(sourceNode);
-            var productsToProcess = new List<string>();
-            //productsToProcess.Add("DK282742");
-            //productsToProcess.Add("DK162934");
-            //productsToProcess.Add("DK243978");
-            //productsToProcess.Add("DK162961");
-            //productsToProcess.Add("DK177541");
-            //productsToProcess.Add("DK162952");
-            //productsToProcess.Add("DK177532");
-            //productsToProcess.Add("DK238332");
-            //productsToProcess.Add("DK238341");
-            //productsToProcess.Add("DK263378");
-            //productsToProcess.Add("DK288620");
-            //productsToProcess.Add("DK187616");
-            //productsToProcess.Add("DK187681");
-            //productsToProcess.Add("DK121883");
-            //productsToProcess.Add("DK114819");
-            //productsToProcess.Add("DK187699");
-            //productsToProcess.Add("DK187663");
-            //productsToProcess.Add("DK334873");
-            //productsToProcess.Add("DK318675");
-            //productsToProcess.Add("DK187672");
+            var productsToProcess = new List<string>() { };
 
             if (productsToProcess.Any() && !productsToProcess.Contains(productCode))
             {
@@ -70,21 +51,68 @@ namespace DecoStreetIntegracja.Integrations.Base
 
             try
             {
-                Console.WriteLine($"Processing product: {productCode}");
+                Console.WriteLine($"{idx + 1}/{count} Processing product: {productCode}");
 
                 Thread.Sleep(500);
 
                 var existingProduct = GetExistingProduct(productCode);
 
                 if (existingProduct != null)
+                //if (false)
                 {
                     var productForUpdate = GenerateProductForUpdate(existingProduct, sourceNode, updateDescriptions, canChangePromotion);
-                    if (productForUpdate != null)
+                    if (!updateImages && productForUpdate != null)
                     {
                         UpdateProduct(productForUpdate);
                         if (productForUpdate.RemovePromotion)
                         {
                             DeletePromotion(existingProduct.special_offer.promo_id);
+                        }
+                    }
+                    else if (updateImages)
+                    {
+                        var erroredImageUrl = new List<string>();
+
+                        try
+                        {
+                            Thread.Sleep(500);
+                            var images = GetExistingProductImages(existingProduct.product_id);
+                            foreach (var image in images)
+                            {
+                                try
+                                {
+                                    Thread.Sleep(500);
+                                    DeleteProductImage(image.gfx_id);
+                                    Logger.Log($"DELETED IMAGE FOR PRODUCT: {productCode}, IMAGE ID: {image.gfx_id}");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Log($"ERROR DELETING IMAGE FOR PRODUCT: {productCode}, IMAGE ID: {image.gfx_id}");
+                                    Logger.LogException(ex);
+                                }
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log($"ERROR GETTING IMAGES FOR PRODUCT: {productCode}");
+                            Logger.LogException(ex);
+                        }
+
+                        foreach (var item in GenerateImagesForInsert2(existingProduct.product_id, sourceNode))
+                        {
+                            Thread.Sleep(500);
+                            try
+                            {
+                                var image_id = InsertProductImage(item);
+                                Logger.Log($"ADDED IMAGE FOR PRODUCT: {productCode}, IMAGE ID: {image_id}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log($"ERROR ADDING IMAGE {productCode}, <strong>EXCEPTION</strong>: {ex.Message}");
+                                Logger.LogException(ex);
+                                erroredImageUrl.Add(item.url);
+                            }
                         }
                     }
                     else
@@ -97,6 +125,11 @@ namespace DecoStreetIntegracja.Integrations.Base
                     if (insertNew)
                     {
                         var product = GenerateProductForInsert(sourceNode);
+
+                        //if (product.stock.price > 10000)
+                        //{
+
+                        //}
 
                         if (product.stock.price == 0)
                         {
@@ -193,7 +226,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             product.producer_id = GetProducerId();
             product.stock.stock = stock;
             product.stock.price = price;
-            product.stock.weight = 0;
+            product.stock.weight = weight;
             product.stock.delivery_id = GetDeliveryId();
 
             product.translations.pl_PL = new Translation
@@ -330,7 +363,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             throw new Exception($"GetExistingProduct, StatusCode: {response.StatusCode}, Content: {response.Content}, Item: {productCode}");
         }
 
-        private int InsertProduct(ProductForInsert product)
+        internal int InsertProduct(ProductForInsert product)
         {
             var client = new RestClient(Api);
             client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", AuthToken));
@@ -348,7 +381,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             throw new Exception($"InsertProduct, StatusCode: {response.StatusCode}, Content: {response.Content}, Item: {new JsonSerializer().Serialize(product)}");
         }
 
-        private int InsertProductImage(ProductImageForInsert image)
+        internal int InsertProductImage(ProductImageForInsert image)
         {
             var client = new RestClient(Api);
             client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", AuthToken));
@@ -364,6 +397,44 @@ namespace DecoStreetIntegracja.Integrations.Base
             }
 
             throw new Exception($"InsertProductImage, StatusCode: {response.StatusCode}, Content: {response.Content}, Item: {new JsonSerializer().Serialize(image)}");
+        }
+
+        internal IList<ProductImageData> GetExistingProductImages(int product_id)
+        {
+            var client = new RestClient(Api);
+            client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", AuthToken));
+            var request = new RestRequest("product-images?filters={\"product_id\":\"" + product_id + "\"}", Method.GET);
+            var response = client.Execute<ProductImagesListResponse>(request);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                //Console.WriteLine($"X-Shop-Api-Calls: {response.Headers.First(x => x.Name == "X-Shop-Api-Calls").Value}");
+                //Console.WriteLine($"X-Shop-Api-Limit: {response.Headers.First(x => x.Name == "X-Shop-Api-Limit").Value}");
+                //Console.WriteLine($"X-Shop-Api-Bandwidth: {response.Headers.First(x => x.Name == "X-Shop-Api-Bandwidth").Value}");
+                if (response.Data.count > 0)
+                {
+                    return response.Data.list;
+                }
+                return default;
+            }
+
+            throw new Exception($"GetExistingProductImages, StatusCode: {response.StatusCode}, Content: {response.Content}, Item: {product_id}");
+        }
+
+        private bool DeleteProductImage(int image_id)
+        {
+            var client = new RestClient(Api);
+            client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", AuthToken));
+            var request = new RestRequest($"product-images/{image_id}", Method.DELETE);
+
+            var response = client.Execute<bool>(request);
+
+            if (response.StatusCode == HttpStatusCode.OK && response.Data)
+            {
+                return response.Data;
+            }
+
+            throw new Exception($"DeleteProductImage, StatusCode: {response.StatusCode}, Content: {response.Content}, ProductImage id: {image_id}");
         }
 
         private bool UpdateProduct(ProductForUpdate product)
@@ -402,6 +473,11 @@ namespace DecoStreetIntegracja.Integrations.Base
 
         private void DownloadSourceFile()
         {
+            if (string.IsNullOrWhiteSpace(SourcePath))
+            {
+                return;
+            }
+
             using (var webClient = new WebClient())
             {
                 ServicePointManager.Expect100Continue = true;

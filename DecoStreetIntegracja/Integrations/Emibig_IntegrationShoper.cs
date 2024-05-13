@@ -13,9 +13,9 @@ namespace DecoStreetIntegracja.Integrations
 {
     public class Emibig_IntegrationShoper : IntegratorShoperBase
     {
-        internal override string SourcePath => "https://sklep.emibig.com.pl/products2.xml";
+        internal override string SourcePath => @"C:\Users\mariu\Downloads\emibig111123.xml";
 
-        internal override string IdPrefix => "emi";
+        internal override string IdPrefix => "emix";
 
         internal override int GetDeliveryId()
         {
@@ -24,26 +24,12 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override int? GetProducerId()
         {
-            return 442;
+            return 467;
         }
 
         internal override string GetDescriptionFromNode(XmlNode sourceNode)
         {
-            var textStripped = sourceNode["content"].InnerText.Replace("&nbsp;", "")
-                .Replace("\t", "")
-                // .Replace("\r\n", "<br>")
-                .Replace("Dowód zakupu: Faktura / paragon\r\n", "");
-
-            var bredText = Regex.Replace(textStripped, @"[(\r\n)]{2,}", "<br>");
-
-            var descSplit = bredText.Split(new string[] { "<br>" }, StringSplitOptions.None);
-
-            for (int i = 0; i < descSplit.Length; i++)
-            {
-                descSplit[i] = "<p>" + descSplit[i].Replace("\r\n", "</p><p>") + "</p>";
-            }
-
-            return string.Join("", descSplit);
+            return sourceNode["desc"].InnerText;
         }
 
         internal override string GetIdFromNode(XmlNode sourceNode)
@@ -53,9 +39,9 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override IEnumerable<string> GetImageUrls(XmlNode sourceNode)
         {
-            yield return sourceNode["img"].InnerText.Replace(" ", "%20");
+            //yield return sourceNode["photos"].InnerText.Replace(" ", "%20");
 
-            foreach (XmlNode item in sourceNode["gallery"].ChildNodes)
+            foreach (XmlNode item in sourceNode["photos"].ChildNodes)
             {
                 yield return item.InnerText.Replace(" ", "%20");
             }
@@ -68,7 +54,7 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override string GetNameFromNode(XmlNode sourceNode)
         {
-            return sourceNode["title"].InnerText;
+            return sourceNode["name"].InnerText;
         }
 
         internal override decimal GetPriceBeforeDiscount(XmlNode sourceNode)
@@ -78,7 +64,7 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override decimal GetPriceFromNode(XmlNode sourceNode)
         {
-            return decimal.Parse(sourceNode["price"].InnerText, CultureInfo.InvariantCulture);
+            return decimal.Parse(sourceNode["retailPriceGross"].InnerText, CultureInfo.InvariantCulture);
         }
 
         internal override string GetPromoEndDateFromNode(XmlNode sourceNode)
@@ -105,7 +91,7 @@ namespace DecoStreetIntegracja.Integrations
         {
             var xmlDocument = new XmlDocument();
             xmlDocument.Load(sourceStream);
-            var xmlNodeList = xmlDocument.SelectNodes("//products/item");
+            var xmlNodeList = xmlDocument.SelectNodes("//products/product");
 
             var list = xmlNodeList.Cast<XmlNode>().ToList();
 
@@ -113,7 +99,7 @@ namespace DecoStreetIntegracja.Integrations
 
             for (int i = 0; i < list.Count; i++)
             {
-                ProcessProduct(list[i]);
+                ProcessProduct(list, i, list.Count);
             }
         }
     }

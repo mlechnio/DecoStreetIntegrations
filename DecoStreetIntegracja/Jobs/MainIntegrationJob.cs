@@ -2,7 +2,7 @@ using DecoStreetIntegracja.Integrations;
 using DecoStreetIntegracja.Utils;
 using Quartz;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace DecoStreetIntegracja.Jobs
 {
@@ -10,10 +10,14 @@ namespace DecoStreetIntegracja.Jobs
     {
         public void Execute(IJobExecutionContext context)
         {
+            var watch = Stopwatch.StartNew();
             Logger.Clear();
             Logger.Log("Integrations Started");
             RunIntegrations();
+            watch.Stop();
+            var timespan = new TimeSpan(watch.ElapsedTicks);
             Logger.Log("Integrations Ended");
+            Logger.LogFirst($"Execution Time: {timespan}");
             new EmailSender().SendLogs();
         }
 
@@ -91,11 +95,33 @@ namespace DecoStreetIntegracja.Jobs
             //    Logger.LogException(ex);
             //}
 
+            //try
+            //{
+            //    Logger.Log("D2_Kwadrat Started");
+            //    new D2_Kwadrat_IntegratorShoper();
+            //    Logger.Log("D2_Kwadrat Ended");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.LogException(ex);
+            //}
+
+            //try
+            //{
+            //    Logger.Log("Eltap_IntegrationShoper Started");
+            //    new Eltap_IntegrationShoper();
+            //    Logger.Log("Eltap_IntegrationShoper Ended");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.LogException(ex);
+            //}
+
             try
             {
-                Logger.Log("D2_Kwadrat Started");
-                new D2_Kwadrat_IntegratorShoper();
-                Logger.Log("D2_Kwadrat Ended");
+                Logger.Log("Emibig_IntegrationShoper Started");
+                new Emibig_IntegrationShoperUpdateImages();
+                Logger.Log("Emibig_IntegrationShoper Ended");
             }
             catch (Exception ex)
             {

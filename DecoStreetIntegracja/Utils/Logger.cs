@@ -21,6 +21,12 @@ namespace DecoStreetIntegracja.Utils
             Exceptions = new List<Exception>();
         }
 
+        public static void LogFirst(string message)
+        {
+            Console.WriteLine(message);
+            Events.Insert(0, new Event(message));
+        }
+
         public static void Log(string message)
         {
             Console.WriteLine(message);

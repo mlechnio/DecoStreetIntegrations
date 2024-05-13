@@ -5,3 +5,4 @@ obj
 /.vs/DecoStreetIntegracja/v15/Server/sqlite3
 /.vs/DecoStreetIntegracja/v16/Server/sqlite3
 /packages/RestSharp.105.2.3
+/packages

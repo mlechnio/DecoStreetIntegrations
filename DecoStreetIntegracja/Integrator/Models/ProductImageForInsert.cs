@@ -14,6 +14,8 @@ namespace DecoStreetIntegracja.Integrator.Models
 
         public string url { get; set; }
 
+        public string content { get; set; }
+
         public ProductTranslations translations { get; set; }
     }
 }

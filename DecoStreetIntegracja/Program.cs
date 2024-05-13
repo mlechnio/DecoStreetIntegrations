@@ -12,18 +12,18 @@ namespace DecoStreetIntegracja
     {
         private static void Main(string[] args)
         {
-            var schedulerFactory = new StdSchedulerFactory();
-            var scheduler = schedulerFactory.GetScheduler();
-            scheduler.Start();
+            //var schedulerFactory = new StdSchedulerFactory();
+            //var scheduler = schedulerFactory.GetScheduler();
+            //scheduler.Start();
 
-            var job = JobBuilder.Create<MainIntegrationJob>().Build();
+            //var job = JobBuilder.Create<MainIntegrationJob>().Build();
 
-            var trigger = TriggerBuilder.Create()
-                            .WithCronSchedule(StringCostants.CRON_SCHEDULE)
-                            .StartNow()
-                            .Build();
+            //var trigger = TriggerBuilder.Create()
+            //                .WithCronSchedule(StringCostants.CRON_SCHEDULE)
+            //                .StartNow()
+            //                .Build();
 
-            scheduler.ScheduleJob(job, trigger);
+            //scheduler.ScheduleJob(job, trigger);
 #if DEBUG
             new MainIntegrationJob().Execute(null);
 #endif

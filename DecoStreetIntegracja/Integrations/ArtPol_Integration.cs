@@ -12,11 +12,11 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override string SourcePath => "http://www.art-pol.pl/offers/pl_wszystkie.xml";
 
-        internal override string IdPrefix => "slonecznikRM";
+        internal override string IdPrefix => "absgeoRM";
 
-        private string Name => "Obraz Słoneczniki";
+        private string Name => "Obraz Abstrakcje Geometryczne";
 
-        private string BreadCrumb => "Kwiaty / Sloneczniki";
+        private string BreadCrumb => "Abstrakcje - Geometryczne";
 
         private bool IsR => false;
 
