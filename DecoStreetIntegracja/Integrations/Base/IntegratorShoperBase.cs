@@ -221,6 +221,7 @@ namespace DecoStreetIntegracja.Integrations.Base
             var stock = GetStockFromNode(sourceNode);
             var weight = GetWeightFromNode(sourceNode);
 
+            product.category_id = GetCategoryId() ?? product.category_id;
             product.code = IdPrefix + GetIdFromNode(sourceNode);
             product.pkwiu = string.Empty;
             product.producer_id = GetProducerId();
@@ -264,6 +265,8 @@ namespace DecoStreetIntegracja.Integrations.Base
         internal abstract int GetDeliveryId();
 
         internal virtual int? GetProducerId() => null;
+
+        internal virtual int? GetCategoryId() => null;
 
         private ProductForUpdate GenerateProductForUpdate(Product existingProduct, XmlNode sourceNode, bool updateDescription, bool canChangePromotion = false)
         {

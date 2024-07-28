@@ -13,9 +13,11 @@ namespace DecoStreetIntegracja.Integrations
 {
     public class Aldex2_IntegrationShoper : IntegratorShoperBase
     {
-        internal override string SourcePath => @"C:\Users\mariu\Downloads\produkty_xml_3_02-11-2023_20_06_29_pl.xml";
+        internal override string SourcePath => @"C:\Users\mariu\Downloads\produkty_xml_3_23-06-2024_13_17_09_pl.xml";
 
         internal override string IdPrefix => "Aldex";
+
+        private List<string> ImportNames = new List<string> { "KINKIET LOOP BABY PINK", "PLAFON TULL 4 (1+2) BLACK", "PLAFON TULL 4 BLACK", "PLAFON TULL 3 (1+2) BLACK", "PLAFON TULL 3 BLACK", "LAMPKA BIURKOWA LOOP BABY PINK", "LAMPKA BIURKOWA LOOP DUSTY BLUE", "LAMPKA BIURKOWA LOOP RED WINE", "LAMPKA BIURKOWA LOOP CORAL", "LAMPKA BIURKOWA UNA BEIGE", "LAMPA WISZĄCA UNA 2 BEIGE", "LAMPA WISZĄCA UNA 4 BEIGE L", "PLAFON UNA 2 BEIGE", "KINKIET UNA BEIGE", "PLAFON STICK ALL BLACK S", "PLAFON STICK ALL WHITE S", "PLAFON STICK BLACK S", "PLAFON STICK WHITE S", "KINKIET BALL II BEIGE S", "KINKIET BALL II DUSTY BLUE S", "KINKIET BALL II RED WINE S", "KINKIET BALL II MUSTARD S", "KINKIET BALL II LILAC S", "KINKIET BALL II PISTACHIO S", "KINKIET BALL II CORAL S" };
 
         internal override void Process()
         {
@@ -29,7 +31,10 @@ namespace DecoStreetIntegracja.Integrations
 
             for (int i = 0; i < list.Count; i++)
             {
-                ProcessProduct(list, i, list.Count);
+                if (ImportNames.Contains(GetNameFromNode(list[i])))
+                {
+                    ProcessProduct(list, i, list.Count);
+                }
             }
         }
 
@@ -50,7 +55,7 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override int GetDeliveryId()
         {
-            return 8;
+            return 12;
         }
 
         internal override string GetDescriptionFromNode(XmlNode sourceNode)
@@ -121,7 +126,7 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override int? GetProducerId()
         {
-            return 437;
+            return 471;
         }
     }
 }

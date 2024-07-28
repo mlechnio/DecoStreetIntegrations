@@ -13,18 +13,20 @@ namespace DecoStreetIntegracja.Integrations
 {
     public class Emibig_IntegrationShoper : IntegratorShoperBase
     {
-        internal override string SourcePath => @"C:\Users\mariu\Downloads\emibig111123.xml";
+        internal override string SourcePath => @"C:\Users\mariu\Downloads\produkty_xml_3_23-06-2024_13_46_57_pl.xml";
 
         internal override string IdPrefix => "emix";
 
+        private List<string> ImportNames = new List<string> { "TECNO 1XXL WHITE oprawa oświetleniowa", "TECNO 1XL WHITE oprawa oświetleniowa", "TECNO 1L WHITE oprawa oświetleniowa", "TECNO 1S WHITE oprawa oświetleniowa", "TECNO 1XXL BLACK oprawa oświetleniowa", "TECNO 1XL BLACK oprawa oświetleniowa", "TECNO 1L BLACK oprawa oświetleniowa", "TECNO 1M BLACK oprawa oświetleniowa", "TECNO 1S BLACK oprawa oświetleniowa", };
+
         internal override int GetDeliveryId()
         {
-            return 14;
+            return 9;
         }
 
         internal override int? GetProducerId()
         {
-            return 467;
+            return 472;
         }
 
         internal override string GetDescriptionFromNode(XmlNode sourceNode)
@@ -99,7 +101,10 @@ namespace DecoStreetIntegracja.Integrations
 
             for (int i = 0; i < list.Count; i++)
             {
-                ProcessProduct(list, i, list.Count);
+                if (ImportNames.Contains(GetNameFromNode(list[i])))
+                {
+                    ProcessProduct(list, i, list.Count);
+                }
             }
         }
     }
