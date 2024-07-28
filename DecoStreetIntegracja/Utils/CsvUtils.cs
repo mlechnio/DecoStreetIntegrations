@@ -43,5 +43,29 @@ namespace DecoStreetIntegracja.Utils
 
             return result;
         }
+
+        public List<string> GetBazarBizarDecostreetSkus(string fileName)
+        {
+            var result = new List<string>();
+
+            using (var reader = new StreamReader(@"Files/" + fileName + ".csv"))
+            using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = ";",
+                HeaderValidated = null,
+                MissingFieldFound = (headerNames, index, context) =>
+                {
+                },
+            }))
+            {
+                var records = csv.GetRecords<CsvRowSku>().ToList();
+                foreach (var row in records)
+                {
+                    result.Add(row.Sku.Trim());
+                }
+            }
+
+            return result;
+        }
     }
 }

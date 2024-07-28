@@ -126,6 +126,7 @@
     <Compile Include="Integrations\Base\IntegrationBase.cs" />
     <Compile Include="Integrations\CustomFormGoogle_Integration.cs" />
     <Compile Include="Integrations\CustomForm_Integration.cs" />
+    <Compile Include="Integrations\BazarBizar_IntegratorShoper.cs" />
     <Compile Include="Integrations\D2_Kwadrat_IntegratorShoper.cs" />
     <Compile Include="Integrations\Durbas_Integration.cs" />
     <Compile Include="Integrations\Eltap_IntegrationShoper.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Integrator\ApiModels\ProductListResponse.cs" />
     <Compile Include="Integrator\Models\AuthResponse.cs" />
     <Compile Include="Integrator\Models\CsvRowProducerAndName.cs" />
+    <Compile Include="Integrator\Models\CsvRowSku.cs" />
     <Compile Include="Integrator\Models\Product.cs" />
     <Compile Include="Integrator\Models\ProductForInsert.cs" />
     <Compile Include="Integrator\Models\ProductForUpdate.cs" />
@@ -163,6 +165,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Files\BazarBizarDecostreetSkus.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
