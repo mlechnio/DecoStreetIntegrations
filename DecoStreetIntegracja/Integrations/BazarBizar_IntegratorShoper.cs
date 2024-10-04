@@ -30,7 +30,7 @@ namespace DecoStreetIntegracja.Integrations
 
             for (int i = 0; i < list.Count; i++)
             {
-                ProcessProduct(list, i, list.Count, canChangePromotion: true);
+                ProcessProduct(list, i, list.Count);
             }
         }
 
@@ -41,7 +41,7 @@ namespace DecoStreetIntegracja.Integrations
 
         internal override decimal GetPriceFromNode(XmlNode sourceNode)
         {
-            return decimal.Parse(sourceNode["g:price"].InnerText.Replace(",", ".").Replace(" EUR", ""), CultureInfo.InvariantCulture) * 5;
+            return decimal.Parse(sourceNode["g:price"].InnerText.Replace(",", ".").Replace(" EUR", ""), CultureInfo.InvariantCulture) * 10;
         }
 
         internal override decimal GetStockFromNode(XmlNode sourceNode)

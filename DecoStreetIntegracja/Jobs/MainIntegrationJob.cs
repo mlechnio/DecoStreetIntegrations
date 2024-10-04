@@ -234,6 +234,17 @@ namespace DecoStreetIntegracja.Jobs
                 Logger.LogException(ex);
             }
 
+            try
+            {
+                Logger.Log("BazarBizar_IntegratorShoper Started");
+                new BazarBizar_IntegratorShoper();
+                Logger.Log("BazarBizar_IntegratorShoper Ended");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+            }
+
             //try
             //{
             //    Logger.Log("Malodesign Started");
